@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>{{ page.title }}</title>
+  <link rel="stylesheet" type="text/css" href="{{ "/css/style.css" | relative_url }}">
+</head>
+
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a>
+      <li><a href="/blog">Blog</a>
+    </ul>
+  </nav>
+
+  <div class="container">
+
+    {{ content }}
+
+  </div>
+
+  <footer>
+    <ul>
+      <li><a href="mailto:gerrit@gerritbirkeland.com">email</a>
+      <li><a href="https://github.com/gerrit0">github.com/gerrit0</a>
+      <li><a href="https://codereview.stackexchange.com/users/142650/gerrit0">code review</a>
+    </ul>
+  </footer>
+</body>
+
+</html>
