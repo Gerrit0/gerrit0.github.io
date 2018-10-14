@@ -39,7 +39,7 @@ I tried loading one of the executables in [dnSpy](https://github.com/0xd4d/dnSpy
 00001a90: 2500 7300 0a00 0000 0000 0000 0000 0000  %.s.............
 ```
 
-Well this is interesting! If you are familiar with how strings are stored in C, you will know that `0x00` ends a string. The program `strings` uses this and the ASCII range to search for strings in binary files. The strings above do not follow this pattern and thus would not have been found if I had even thought to try it out. Instead, each character is followed by a null byte and it takes two null bytes to end a string. Now that I was aware of this, I kept scrolling through the file and found more text later.
+Well this is interesting! If you are familiar with how strings are stored in C, you will know that `0x00` ends a string. The program `strings` uses this and the ASCII range to search for strings in binary files. The strings above do not follow this pattern and thus would not have been found if I had even thought to try it out (without some flags to make it look for two byte wide characters). Instead, each character is followed by a null byte and it takes two null bytes to end a string. Now that I was aware of this, I kept scrolling through the file and found more text later.
 
 ```text
 00002aa0: 0500 4200 5200 4900 4300 4b00 0000 0000  ..B.R.I.C.K.....
