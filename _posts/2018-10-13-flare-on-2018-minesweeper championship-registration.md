@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "FLARE ON 2018 - Minesweeper Championship Registration"
-date: 2018-10-05
+date: 2018-10-13
 ---
 
 This is the first year I heard about the FLARE-On CTF by FireEye, which this year ran from August 24 through October 5. There were a total of 12 levels, of which I was able to complete 3. I got roughly a third of the way through the fourth challenge before getting distracted with PicoCTF.

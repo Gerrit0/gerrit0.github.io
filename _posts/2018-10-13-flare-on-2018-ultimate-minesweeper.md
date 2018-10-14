@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "FLARE ON 2018 - Ultimate Minesweeper"
-date: 2018-10-05
+date: 2018-10-13
 ---
 
 This challenge reads:
