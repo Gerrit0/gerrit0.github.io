@@ -7,12 +7,7 @@
 </head>
 
 <body>
-  <nav>
-    <ul>
-      <li><a href="/">Home</a>
-      <li><a href="/blog">Blog</a>
-    </ul>
-  </nav>
+  {% include navigation.html %}
 
   <div class="container">
 
@@ -20,13 +15,8 @@
 
   </div>
 
-  <footer>
-    <ul>
-      <li><a href="mailto:gerrit@gerritbirkeland.com">email</a>
-      <li><a href="https://github.com/gerrit0">github.com/gerrit0</a>
-      <li><a href="https://codereview.stackexchange.com/users/142650/gerrit0">code review</a>
-    </ul>
-  </footer>
+  {% include footer.html %}
+
 </body>
 
 </html>

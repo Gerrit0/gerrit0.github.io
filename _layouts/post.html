@@ -1,10 +1,29 @@
----
-layout: default
----
+<!DOCTYPE html>
+<html>
 
-<h1>{{ page.title }}</h1>
-<p class="meta">{{ page.date | date_to_string }}</p>
+<head>
+  <title>{{ page.title }}</title>
+  <link rel="stylesheet" type="text/css" href="/css/main.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.13.1/build/styles/default.min.css">
+</head>
 
-<div class="post">
-  {{ content }}
-</div>
+<body>
+  {% include navigation.html %}
+
+  <div class="container">
+
+    <h1>{{ page.title }}</h1>
+    <p class="meta">{{ page.date | date_to_string }}</p>
+
+    <div class="post">
+      {{ content }}
+    </div>
+
+  </div>
+
+  {% include footer.html %}
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.13.1/build/highlight.min.js"></script>
+</body>
+
+</html>
