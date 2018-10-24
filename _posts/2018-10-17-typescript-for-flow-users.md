@@ -270,7 +270,9 @@ It isn't currently possible to completely represent `$Call` with TypeScript as i
 
 ### `Class<T>`
 
-Is unnecessary in TypeScript, just use `typeof`.
+Is not quite possible in TypeScript, there's no way to recover the constructor type from any instance type. (`T['constructor']` is just `Function`)
+
+However, it is mostly unnecessary in TypeScript, just use `typeof` and the class name.
 
 ```ts
 class Store { }
