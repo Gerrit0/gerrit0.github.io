@@ -21,4 +21,5 @@ Over the past two summers I have worked as an intern at [Northrop Grumman](http:
 
 ### Projects
 
-- [image-overlay-tool](http://gerritbirkeland.com/image-overlay-tool) - a tool to quickly overlay an image on top of another image.
+- [image-overlay-tool](https://gerritbirkeland.com/image-overlay-tool) - a tool to quickly overlay an image on top of another image.
+- [tools](https://gerritbirkeland.com/tools) - a collection of scripts to make my life easier
