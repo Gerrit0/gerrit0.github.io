@@ -34,7 +34,7 @@ Let's start with a warmup.
 
 This doesn't look to painful at first glance. The first thing I did was to pull all of the provided rules into an array I could use to test with, and added a loop that will check each test. I'm using Python 3, but the code would be fairly similar another language.
 
-```python3
+```python
 #!/usr/bin/env python3
 
 tests = [
@@ -61,7 +61,7 @@ for (name, problem, result) in tests:
 
 While the "combine" rule is probably the simplest to implement, I decided to start by applying the "left-associative" rule first, and adding a helper function to combine two parts. For starters, this function will just handle the first rule.
 
-```python3
+```python
 def solve(s):
     parts = s.split(' + ')
     while len(parts) > 1:
@@ -83,7 +83,7 @@ Depth can be easily defined:
 
 In order to write this function, we first need a function that will split a string into its nodes. `getNodes` should return `[]` for the empty string, `[ '()' ]` for `()` and `[ '()', '()' ]` for `()()`.
 
-```python3
+```python
 def getNodes(s):
     result = []
     depth = 0
@@ -98,7 +98,7 @@ def getNodes(s):
 
 With this function, defining `getDepth` is fairly trivial.
 
-```python3
+```python
 def getDepth(s):
     nodes = getNodes(s)
     if len(nodes) == 0:
@@ -110,7 +110,7 @@ def getDepth(s):
 
 Now we only need to realize one more thing. Since we can merge into either the left or the right, we need to check the last node of the left hand side if we are trying to merge the right hand side into the left hand side. Similarly, if we are trying to merge the left hand side into the right hand side, we need to check the depth of the first node in the right hand side. In code:
 
-```python3
+```python
 def combine(a, b):
     if getDepth(getNodes(a)[-1]) > getDepth(b):
         return '({}{})'.format(a[1:-1], b)
@@ -121,7 +121,7 @@ def combine(a, b):
 
 With this function, the answer is complete! I wrote a bit more code to allow for an interactive prompt that I could paste into when connecting to the server. Below is the complete script for anyone interested:
 
-```python3
+```python
 tests = [
     ['combine', '() + ()', '()()'],
     ['absorb-left', '((())) + ()', '((())())'],
