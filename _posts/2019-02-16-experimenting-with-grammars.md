@@ -24,11 +24,11 @@ const parts = text.split(',')
 const result = []
 
 for (const part of parts) {
-	if (/\d/.test(part)) {
-  	result.push({ value: parseInt(part), parts: [] })
+  if (/\d/.test(part)) {
+    result.push({ value: parseInt(part), parts: [] })
   }
   if (/[a-z]/.test(part)) {
-  	result[result.length - 1].parts.push(...part.match(/[a-z]/g))
+    result[result.length - 1].parts.push(...part.match(/[a-z]/g))
   }
 }
 
@@ -42,53 +42,53 @@ There are several JavaScript parser generators available, but I decided to use [
 I've found that the best way to experiment with a parser is to toss it into the [parser playground](https://omrelli.ug/nearley-playground/) and create a few tests. The first step is to accept single numbers and comma separated numbers.
 
 ```nearley
-main -> problems {% d => JSON.stringify(d[0]) %}
+main -> problems {\% d => JSON.stringify(d[0]) \%}
 
 problems ->
   problem # No id since we want the problem to be in an array
-  | problems "," problem {% d => d[0].concat(d[2]) %}
+  | problems "," problem {\% d => d[0].concat(d[2]) \%}
 
-problem -> number {% id %}
+problem -> number {\% id \%}
 
-number -> [0-9]:+ {% d => +d[0].join('') %}
+number -> [0-9]:+ {\% d => +d[0].join('') \%}
 ```
 
 This parser is rather restrictive, it won't let you include spaces anywhere, so let's fix that. Convention is to use `_` for whitespace. According to the [How to grammar good](https://nearley.js.org/docs/how-to-grammar-good#postprocess-or-dispose) guide, this rule should return null to throw away the parsed value.
 
 ```nearley
-main -> _ problems _ {% d => JSON.stringify(d[1]) %}
+main -> _ problems _ {\% d => JSON.stringify(d[1]) \%}
 
 problems ->
   problem # No id since we want the problem to be in an array
-  | problems _ "," _ problem {% d => d[0].concat(d[4]) %}
+  | problems _ "," _ problem {\% d => d[0].concat(d[4]) \%}
 
-problem -> number {% id %}
+problem -> number {\% id \%}
 
-number -> [0-9]:+ {% d => +d[0].join('') %}
+number -> [0-9]:+ {\% d => +d[0].join('') \%}
 
-_ -> [\s]:* {% () => null %}
+_ -> [\s]:* {\% () => null \%}
 ```
 
 Next up, let's extend the parser to also accept problem parts, so `1a, b` is now a valid problem. This isn't too difficult, if you do it the right way.
 
 ```nearley
-main -> _ problems _ {% d => JSON.stringify(d[1]) %}
+main -> _ problems _ {\% d => JSON.stringify(d[1]) \%}
 
 problems ->
     problem # No id since we want the problem to be in an array
-  | problems _ "," _ problem {% d => d[0].concat(d[4]) %}
+  | problems _ "," _ problem {\% d => d[0].concat(d[4]) \%}
 
-problem -> number _ parts:? {% ([value, _, parts]) => ({ value, parts: parts || [] }) %}
+problem -> number _ parts:? {\% ([value, _, parts]) => ({ value, parts: parts || [] }) \%}
 
 parts ->
-    part {% d => d[1] %}
-  | parts _ "," _ part {% d => d[0].concat(d[4]) %}
+    part {\% d => d[1] \%}
+  | parts _ "," _ part {\% d => d[0].concat(d[4]) \%}
 
-part -> [a-z]:+ {% id %}
+part -> [a-z]:+ {\% id \%}
 
-number -> [0-9]:+ {% d => +d[0].join('') %}
+number -> [0-9]:+ {\% d => +d[0].join('') \%}
 
-_ -> [\s]:* {% () => null %}
+_ -> [\s]:* {\% () => null \%}
 ```
 
 In my first implementation of this parser, I forgot that I could use the `:?` EBNF modifier on `parts` in the `problem` rule to indicate that it was optional, and tried to make `parts` optional within the rule with `_ [a-z]:* _`. This is a problem since it introduces ambiguity. (How should the parser handle `1   a  `?)
@@ -96,26 +96,26 @@ In my first implementation of this parser, I forgot that I could use the `:?` EB
 Now all that's left is to handle problem ranges, this is also simple since ranges can't have `parts`.
 
 ```nearley
-main -> _ problems {% d => JSON.stringify(d[1]) %}
+main -> _ problems {\% d => JSON.stringify(d[1]) \%}
 
 problems ->
     problem # No id since we want the problem to be in an array
   | problem_range # ditto
-  | problems _ "," _ (problem|problem_range) {% d => d[0].concat(d[4]) %}
+  | problems _ "," _ (problem|problem_range) {\% d => d[0].concat(d[4]) \%}
 
-problem -> number _ parts:? {% ([value, _, parts]) => ({ value, parts: parts || [] }) %}
+problem -> number _ parts:? {\% ([value, _, parts]) => ({ value, parts: parts || [] }) \%}
 
-problem_range -> number _ "-" _ number {% d => ({ range: [d[0], d[4]] }) %}
+problem_range -> number _ "-" _ number {\% d => ({ range: [d[0], d[4]] }) \%}
 
 parts ->
-    part {% id %}
-  | parts _ "," _ part {% d => d[0].concat(d[4]) %}
+    part {\% id \%}
+  | parts _ "," _ part {\% d => d[0].concat(d[4]) \%}
 
-part -> [a-z]:+ {% id %}
+part -> [a-z]:+ {\% id \%}
 
-number -> [0-9]:+ {% d => +d[0].join('') %}
+number -> [0-9]:+ {\% d => +d[0].join('') \%}
 
-_ -> [\s]:* {% () => null %}
+_ -> [\s]:* {\% () => null \%}
 ```
 
 With this change, the parser can now handle both of the problem lists presented at the start of this post, and will throw an error that can quickly show where the problem is if something isn't quite right. I decided to not handle the "Suggested" or "Hand in" prefixes in the parser since I suspect that I will use this code for other classes that don't have these labels in the future.
