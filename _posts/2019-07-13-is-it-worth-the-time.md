@@ -38,11 +38,11 @@ label {
   <input id="shavedTime" type="number" value="5" min="1">
 </label>
 <select id="shavedUnit">
-  <option value="seconds">Seconds</option>
-  <option value="minutes" selected>Minutes</option>
-  <option value="hours">Hours</option>
-  <option value="days">Days</option>
-  <option value="weeks">Weeks</option>
+  <option value="seconds">seconds</option>
+  <option value="minutes" selected>minutes</option>
+  <option value="hours">hours</option>
+  <option value="days">days</option>
+  <option value="weeks">weeks</option>
 </select>
 
 <br>
@@ -52,11 +52,11 @@ label {
   <input id="automateTime" type="number" value="2" min="1">
 </label>
   <select id="automateUnit">
-  <option value="seconds">Seconds</option>
-  <option value="minutes">Minutes</option>
-  <option value="hours" selected>Hours</option>
-  <option value="days">Days</option>
-  <option value="weeks">Weeks</option>
+  <option value="seconds">seconds</option>
+  <option value="minutes">minutes</option>
+  <option value="hours" selected>hours</option>
+  <option value="days">days</option>
+  <option value="weeks">weeks</option>
 </select>
 
 <br>
@@ -137,14 +137,29 @@ label {
       }
     }
 
-    return 'Error'
+    const years = Math.floor(seconds / year)
+    const leftover = seconds - years * year
+    if (leftover === 0) {
+      return `${years} ${plural(years, 'year')}`
+    }
+    return `${years} ${plural(years, 'year')} and ${toHumanString(leftover)}`
   }
 
   function calculate() {
     const secondsSaved = +shavedTime.value * unitToMultiplier(shavedUnit.value)
     const secondsSpent = +automateTime.value * unitToMultiplier(automateUnit.value)
     const timesToRecoup = Math.ceil(secondsSpent / secondsSaved)
-    const timeToRecoup = timesToRecoup * Math.ceil(unitToMultiplier(frequencyUnit.value) * +frequencyTime.value)
+    const frequency = Math.ceil(unitToMultiplier(frequencyUnit.value) * +frequencyTime.value)
+    const timeToRecoup = timesToRecoup * frequency
+
+    if (secondsSaved >= secondsSpent) {
+    	result.textContent = `You should automate it. Automating takes less time than doing the task.`
+      return
+    }
+    if (frequency < secondsSaved) {
+    	result.textContent = `The task takes too long to complete for how often you do it.`
+      return
+    }
 
     result.textContent = `You need to do the task ${timesToRecoup} ${plural(timesToRecoup, 'time')} to save time. ` +
       `It will take ${toHumanString(timeToRecoup)} to recoup the time spent automating.`
