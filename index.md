@@ -7,10 +7,11 @@ title: Gerrit Birkeland
 
 I am a student at The University of Colorado, Colorado Springs and am an avid programmer.
 
-Over the past two summers I have worked as an intern at [Northrop Grumman](http://www.northropgrumman.com/) and am looking forward to returning next summer. During breaks, I usually work on learning a new language, or taking on a new programming challenge.
+Over the past four summers I have worked as an intern at [Northrop Grumman](http://www.northropgrumman.com/) and am looking forward to returning next summer. During breaks, I usually work on learning a new language or taking on a new programming challenge.
 
 ### Languages
 
+- C++
 - TypeScript / JavaScript
 - HTML / CSS / SASS
 - C#
