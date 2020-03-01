@@ -118,15 +118,15 @@ label {
     }
 
     const checks = [
-      [minute, hour, 'minute'],
-      [hour, day, 'hour'],
-      [day, week, 'day'],
+      [month, year, 'month'],
       [week, month, 'week'],
-      [month, year, 'month']
+      [day, week, 'day'],
+      [hour, day, 'hour'],
+      [minute, hour, 'minute'],
     ]
 
     for (const [low, high, label] of checks) {
-      if (seconds < high) {
+      if (seconds < high && seconds >= low) {
         const amount = Math.floor(seconds / low)
         const leftover = seconds - amount * low
         if (leftover === 0) {
