@@ -148,8 +148,8 @@ label {
     const secondsSaved = +shavedTime.value * unitToMultiplier(shavedUnit.value)
     const secondsSpent = +automateTime.value * unitToMultiplier(automateUnit.value)
     const timesToRecoup = Math.ceil(secondsSpent / secondsSaved)
-    const frequency = Math.ceil(unitToMultiplier(frequencyUnit.value) * +frequencyTime.value)
-    const timeToRecoup = timesToRecoup / frequency
+    const frequency = Math.ceil(unitToMultiplier(frequencyUnit.value) / +frequencyTime.value)
+    const timeToRecoup = timesToRecoup * frequency
 
     if (secondsSaved >= secondsSpent) {
     	result.textContent = `You should automate it. Automating takes less time than doing the task.`
