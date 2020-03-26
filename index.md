@@ -22,5 +22,7 @@ Over the past four summers I have worked as an intern at [Northrop Grumman](http
 
 ### Projects
 
-- [image-overlay-tool](https://gerritbirkeland.com/image-overlay-tool) - a tool to quickly overlay an image on top of another image.
+- [TypeDoc](https://typedoc.org) - A documentation generator for TypeScript projects.
+- [n2t-cpu](https://gerritbirkeland.com/n2t-cpu/) - An implementation of the nand2tetris CPU emulator, with support for the full instruction set
+- [image-overlay-tool](https://gerritbirkeland.com/image-overlay-tool) - a tool to quickly overlay an image on top of another image
 - [tools](https://gerritbirkeland.com/tools) - a collection of scripts to make my life easier
