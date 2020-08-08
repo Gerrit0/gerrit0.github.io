@@ -5,20 +5,19 @@ title: Gerrit Birkeland
 
 # Hello, I'm Gerrit
 
-I am a student at The University of Colorado, Colorado Springs and am an avid programmer.
+I am a graduate of The University of Colorado, Colorado Springs and am an avid programmer.
 
-Over the past four summers I have worked as an intern at [Northrop Grumman](http://www.northropgrumman.com/) and am looking forward to returning next summer. During breaks, I usually work on learning a new language or taking on a new programming challenge.
+I work at [Northrop Grumman](https://www.northropgrumman.com/) as a software engineer and on [TypeDoc](https://typedoc.org) on the weekends.
 
 ### Languages
 
 - C++
 - TypeScript / JavaScript
-- HTML / CSS / SASS
+- Rust
+- HTML / CSS
 - C#
 - Java
 - PHP / MySQL
-- Visual Basic
-
 
 ### Projects
 
