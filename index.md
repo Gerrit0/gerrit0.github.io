@@ -7,7 +7,7 @@ title: Gerrit Birkeland
 
 I am a graduate of The University of Colorado, Colorado Springs and am an avid programmer.
 
-I work at [Northrop Grumman](https://www.northropgrumman.com/) as a software engineer and on [TypeDoc](https://typedoc.org) on the weekends.
+I work as a software engineer and on [TypeDoc](https://typedoc.org) on the weekends.
 
 ### Languages
 
