@@ -1,0 +1,44 @@
+@mixin define-theme($values, $theme) {
+  @media (prefers-color-scheme: #{$theme}) {
+    :root {
+      --color-scheme: #{$theme};
+      @each $name, $value in $values {
+        --#{$name}: #{$value};
+      }
+    }
+  }
+}
+
+@mixin define-theme2($values, $theme) {
+  html[data-theme="#{$theme}"] {
+    --color-scheme: #{$theme};
+    @each $name, $value in $values {
+      --#{$name}: #{$value};
+    }
+  }
+}
+
+$light-theme: (
+  "link-color": rgb(53, 132, 184),
+  "text-color": #222,
+  "accent-color": #c5c7c9,
+  "primary-background": #f2f4f8,
+  "secondary-background": #eff0f1,
+);
+
+$dark-theme: (
+  "link-color": rgb(53, 132, 184),
+  "text-color": #f5f5f5,
+  "accent-color": #9096a2,
+  "primary-background": #2b2e33,
+  "secondary-background": #1e2024,
+);
+
+@include define-theme($light-theme, "light");
+@include define-theme($dark-theme, "dark");
+@include define-theme2($light-theme, "light");
+@include define-theme2($dark-theme, "dark");
+
+html {
+  color-scheme: var(--color-scheme);
+}

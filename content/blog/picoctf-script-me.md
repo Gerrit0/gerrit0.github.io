@@ -1,8 +1,8 @@
----
-layout: post
-title: "picoCTF 2018 - script me"
-date: 2018-10-17
----
++++
+title = "picoCTF 2018 - script me"
+date = 2018-10-17
+aliases = ["2018/10/17/picoctf-script-me"]
++++
 
 [picoCTF](https://picoctf.com/) is an annual CTF designed primarily for high school students but the competition is open to everyone. This year contained dozens of challenges and I was able to finish with just under 14k points, which placed me at around 350 in the global scoreboard.
 

@@ -1,8 +1,8 @@
----
-layout: post
-title: "FLARE ON 2018 - Ultimate Minesweeper"
-date: 2018-10-13
----
++++
+title = "FLARE ON 2018 - Ultimate Minesweeper"
+date = 2018-10-13
+aliases = ["flare-on-2018-ultimate-minesweeper"]
++++
 
 This challenge reads:
 

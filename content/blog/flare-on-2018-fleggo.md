@@ -1,8 +1,8 @@
----
-layout: post
-title: "FLARE ON 2018 - FLEGGO"
-date: 2018-10-13
----
++++
+title = "FLARE ON 2018 - FLEGGO"
+date = 2018-10-13
+aliases = ["blog/2018/10/13/flare-on-2018-fleggo"]
++++
 
 This challenge reads:
 
@@ -57,7 +57,7 @@ Everything is awesome!
 12268605.png => s
 ```
 
-Getting the right password creates a file named `########.png` in the current directory. It took me far *far* too long to notice this.
+Getting the right password creates a file named `########.png` in the current directory. It took me far _far_ too long to notice this.
 
 Before writing a script to extract the passwords, I decided to `diff` two of the files to see if anything else interesting popped up.
 

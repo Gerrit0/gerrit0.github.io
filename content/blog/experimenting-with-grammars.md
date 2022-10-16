@@ -1,8 +1,8 @@
----
-layout: post
-title: "Experimenting With Grammars"
-date: 2019-02-16
----
++++
+title = "Experimenting With Grammars"
+date = 2019-02-16
+aliases = ["blog/2019/02/16/experimenting-with-grammars"]
++++
 
 I've been interested in language development for the past few months, and have experimented with building my own compiler using both [Jack W. Crenshaw's tutorial](http://www.stack.nl/~marcov/compiler.pdf) and [Nora Sandler's series](https://norasandler.com/2017/11/29/Write-a-Compiler.html). Unfortunately, while I was able to generate working code, the amount of effort required to achieve a product that I was satisfied with was massive. I never finished either of the above guides.
 
@@ -18,21 +18,21 @@ Hand in: 1, 3bc, 4, 5, 7 b,d, 11, 13
 Now, it's possible to get a pretty good guess at what the problems are just by extracting the numbers or by splitting by commas and getting all the numbers, but I also wanted to capture the problem parts. Doing this manually isn't that hard (ignoring ranges for a moment)
 
 ```js
-const text = '1, 3bc, 4, 5, 7 b,d, 11, 13'
+const text = "1, 3bc, 4, 5, 7 b,d, 11, 13";
 
-const parts = text.split(',')
-const result = []
+const parts = text.split(",");
+const result = [];
 
 for (const part of parts) {
   if (/\d/.test(part)) {
-    result.push({ value: parseInt(part), parts: [] })
+    result.push({ value: parseInt(part), parts: [] });
   }
   if (/[a-z]/.test(part)) {
-    result[result.length - 1].parts.push(...part.match(/[a-z]/g))
+    result[result.length - 1].parts.push(...part.match(/[a-z]/g));
   }
 }
 
-console.log(result)
+console.log(result);
 ```
 
 ... but what's the fun in that? Also, while the above code works, it will accept arbitrary input and, if the input isn't precisely formatted, may produce unexpected results. I wanted something better.
@@ -91,7 +91,7 @@ number -> [0-9]:+ {\% d => +d[0].join('') \%}
 _ -> [\s]:* {\% () => null \%}
 ```
 
-In my first implementation of this parser, I forgot that I could use the `:?` EBNF modifier on `parts` in the `problem` rule to indicate that it was optional, and tried to make `parts` optional within the rule with `_ [a-z]:* _`. This is a problem since it introduces ambiguity. (How should the parser handle `1   a  `?)
+In my first implementation of this parser, I forgot that I could use the `:?` EBNF modifier on `parts` in the `problem` rule to indicate that it was optional, and tried to make `parts` optional within the rule with `_ [a-z]:* _`. This is a problem since it introduces ambiguity. (How should the parser handle `1 a `?)
 
 Now all that's left is to handle problem ranges, this is also simple since ranges can't have `parts`.
 

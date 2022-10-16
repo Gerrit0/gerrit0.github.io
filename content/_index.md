@@ -1,7 +1,7 @@
----
-layout: default
-title: Gerrit Birkeland
----
++++
+title = "Gerrit Birkeland"
+template = "index.html"
++++
 
 # Hello, I'm Gerrit
 

@@ -1,0 +1,124 @@
+@import "./theme.scss";
+
+body {
+  margin: 60px auto;
+  width: 70%;
+  background: var(--primary-background);
+  color: var(--text-color);
+  font-family: "Segoe UI", sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: var(--link-color);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+p,
+ul {
+  font-size: 1.2em;
+  line-height: 1.4em;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.2;
+}
+h1 {
+  font-size: 1.875rem;
+  margin: 0.67rem 0;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin: 0.83rem 0;
+}
+
+h3 {
+  font-size: 1.25rem;
+  margin: 1rem 0;
+}
+
+h4 {
+  font-size: 1.05rem;
+  margin: 1.33rem 0;
+}
+
+h5 {
+  font-size: 1rem;
+  margin: 1.5rem 0;
+}
+
+h6 {
+  font-size: 0.875rem;
+  margin: 2.33rem 0;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--accent-color);
+  padding-bottom: 1em;
+}
+
+nav ul,
+footer ul {
+  font-size: 1em;
+  padding: 0px;
+  list-style: none;
+  font-weight: bold;
+}
+
+nav ul li,
+footer ul li {
+  display: inline;
+  margin-right: 20px;
+}
+
+nav select {
+  height: 3em;
+}
+
+footer {
+  border-top: 1px solid var(--accent-color);
+  padding-top: 0.5em;
+  margin-top: 0.5em;
+  font-size: 0.8em;
+}
+
+/* Blog */
+
+ul.posts {
+  margin: 20px auto 40px;
+}
+
+/* Header links */
+
+h1 a,
+h2 a,
+h3 a {
+  color: inherit;
+  &:hover {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+.site-container {
+  ul {
+    padding-left: 40px;
+  }
+}
