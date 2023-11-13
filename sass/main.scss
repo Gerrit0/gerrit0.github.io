@@ -125,3 +125,18 @@ h3 a {
     padding-left: 40px;
   }
 }
+
+table {
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 0.5em;
+  border: 1px solid var(--accent-color);
+}
+
+tr:nth-child(even),
+thead > tr {
+  background-color: var(--secondary-background);
+}

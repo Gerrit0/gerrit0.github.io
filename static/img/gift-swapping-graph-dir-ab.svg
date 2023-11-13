@@ -1,0 +1,131 @@
+<svg width="243pt" height="235pt" viewBox="0.00 0.00 243.39 234.72" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g class="graph" transform="scale(1 1) rotate(0) translate(4 230.7203)">
+<title>G</title>
+<!-- A -->
+<g class="node">
+<title>A</title>
+<ellipse fill="none" stroke="var(--text-color)" cx="27" cy="-172.296" rx="27" ry="18"/>
+<text text-anchor="middle" x="27" y="-168.096" font-family="Times,serif" font-size="14.00" fill="var(--text-color)">A</text>
+</g>
+<!-- B -->
+<g class="node">
+<title>B</title>
+<ellipse fill="none" stroke="var(--text-color)" cx="27" cy="-54.4243" rx="27" ry="18"/>
+<text text-anchor="middle" x="27" y="-50.2243" font-family="Times,serif" font-size="14.00" fill="var(--text-color)">B</text>
+</g>
+<!-- A&#45;&gt;B -->
+<g class="edge">
+<title>A-&gt;B</title>
+<path fill="none" stroke="var(--text-emphasis)" d="M32.0094,-154.3938C33.9988,-135.3548 34.2829,-104.9737 32.8616,-82.6955"/>
+<polygon fill="var(--text-emphasis)" stroke="var(--text-emphasis)" points="36.3309,-82.1762 32.0269,-72.495 29.3542,-82.7472 36.3309,-82.1762"/>
+</g>
+<!-- C -->
+<g class="node">
+<title>C</title>
+<ellipse fill="none" stroke="var(--text-color)" cx="208.3858" cy="-113.3602" rx="27" ry="18"/>
+<text text-anchor="middle" x="208.3858" y="-109.1602" font-family="Times,serif" font-size="14.00" fill="var(--text-color)">C</text>
+</g>
+<!-- A&#45;&gt;C -->
+<g class="edge">
+<title>A-&gt;C</title>
+<path fill="none" stroke="var(--text-dim)" d="M53.7181,-168.7091C86.8809,-160.4381 143.264,-142.2742 178.0279,-128.7867"/>
+<polygon fill="var(--text-dim)" stroke="var(--text-dim)" points="179.66,-131.9037 187.6476,-124.9433 177.0628,-125.4033 179.66,-131.9037"/>
+</g>
+<!-- D -->
+<g class="node">
+<title>D</title>
+<ellipse fill="none" stroke="var(--text-color)" cx="139.1026" cy="-208.7203" rx="27" ry="18"/>
+<text text-anchor="middle" x="139.1026" y="-204.5203" font-family="Times,serif" font-size="14.00" fill="var(--text-color)">D</text>
+</g>
+<!-- A&#45;&gt;D -->
+<g class="edge">
+<title>A-&gt;D</title>
+<path fill="none" stroke="var(--text-dim)" d="M46.9279,-184.5098C62.287,-190.9421 83.9309,-198.2687 102.3916,-203.4136"/>
+<polygon fill="var(--text-dim)" stroke="var(--text-dim)" points="101.697,-206.8503 112.2599,-206.0278 103.4896,-200.0837 101.697,-206.8503"/>
+</g>
+<!-- E -->
+<g class="node">
+<title>E</title>
+<ellipse fill="none" stroke="var(--text-color)" cx="139.1026" cy="-18" rx="27" ry="18"/>
+<text text-anchor="middle" x="139.1026" y="-13.8" font-family="Times,serif" font-size="14.00" fill="var(--text-color)">E</text>
+</g>
+<!-- A&#45;&gt;E -->
+<g class="edge">
+<title>A-&gt;E</title>
+<path fill="none" stroke="var(--text-dim)" d="M43.0113,-157.7995C65.5724,-131.6748 105.7544,-76.6773 126.4016,-43.9475"/>
+<polygon fill="var(--text-dim)" stroke="var(--text-dim)" points="129.4307,-45.7031 131.6763,-35.349 123.4639,-42.0428 129.4307,-45.7031"/>
+</g>
+<!-- B&#45;&gt;A -->
+<g class="edge">
+<title>B-&gt;A</title>
+<path fill="none" stroke="var(--text-color)" d="M21.9906,-72.3265C20.0012,-91.3656 19.7171,-121.7467 21.1384,-144.0249"/>
+<polygon fill="var(--text-color)" stroke="var(--text-color)" points="17.6691,-144.5442 21.9731,-154.2254 24.6458,-143.9732 17.6691,-144.5442"/>
+</g>
+<!-- B&#45;&gt;D -->
+<g class="edge">
+<title>B-&gt;D</title>
+<path fill="none" stroke="var(--text-color)" d="M34.546,-71.9751C51.3102,-100.2097 91.0378,-155.4262 116.5145,-186.4035"/>
+<polygon fill="var(--text-color)" stroke="var(--text-color)" points="113.8626,-188.6881 122.9765,-194.0908 119.221,-184.1838 113.8626,-188.6881"/>
+</g>
+<!-- B&#45;&gt;E -->
+<g class="edge">
+<title>B-&gt;E</title>
+<path fill="none" stroke="var(--text-color)" d="M53.9319,-51.7096C70.7068,-47.5185 92.2866,-40.6455 109.5333,-34.0596"/>
+<polygon fill="var(--text-color)" stroke="var(--text-color)" points="111.1258,-37.1926 119.1181,-30.2375 108.533,-30.6905 111.1258,-37.1926"/>
+</g>
+<!-- C&#45;&gt;A -->
+<g class="edge">
+<title>C-&gt;A</title>
+<path fill="none" stroke="var(--text-color)" d="M181.6677,-116.9471C148.505,-125.2181 92.1218,-143.382 57.3579,-156.8694"/>
+<polygon fill="var(--text-color)" stroke="var(--text-color)" points="55.7259,-153.7524 47.7382,-160.7129 58.323,-160.2528 55.7259,-153.7524"/>
+</g>
+<!-- C&#45;&gt;D -->
+<g class="edge">
+<title>C-&gt;D</title>
+<path fill="none" stroke="var(--text-color)" d="M191.3386,-127.6978C178.7469,-142.1949 162.1325,-164.7833 150.9374,-182.467"/>
+<polygon fill="var(--text-color)" stroke="var(--text-color)" points="147.8329,-180.8359 145.6271,-191.1986 153.8137,-184.4733 147.8329,-180.8359"/>
+</g>
+<!-- C&#45;&gt;E -->
+<g class="edge">
+<title>C-&gt;E</title>
+<path fill="none" stroke="var(--text-color)" d="M201.656,-95.4845C192.4877,-79.7236 176.259,-56.8236 162.5469,-39.9661"/>
+<polygon fill="var(--text-color)" stroke="var(--text-color)" points="165.1683,-37.6451 156.0596,-32.2338 159.8056,-42.1443 165.1683,-37.6451"/>
+</g>
+<!-- D&#45;&gt;A -->
+<g class="edge">
+<title>D-&gt;A</title>
+<path fill="none" stroke="var(--text-color)" d="M119.1747,-196.5065C103.8156,-190.0743 82.1717,-182.7476 63.711,-177.6027"/>
+<polygon fill="var(--text-color)" stroke="var(--text-color)" points="64.4056,-174.1661 53.8427,-174.9885 62.613,-180.9327 64.4056,-174.1661"/>
+</g>
+<!-- D&#45;&gt;B -->
+<g class="edge">
+<title>D-&gt;B</title>
+<path fill="none" stroke="var(--text-color)" d="M131.5566,-191.1696C114.7924,-162.935 75.0648,-107.7185 49.5881,-76.7412"/>
+<polygon fill="var(--text-color)" stroke="var(--text-color)" points="52.24,-74.4566 43.1261,-69.0539 46.8816,-78.9608 52.24,-74.4566"/>
+</g>
+<!-- D&#45;&gt;C -->
+<g class="edge">
+<title>D-&gt;C</title>
+<path fill="none" stroke="var(--text-color)" d="M156.1498,-194.3827C168.7415,-179.8856 185.356,-157.2972 196.551,-139.6135"/>
+<polygon fill="var(--text-color)" stroke="var(--text-color)" points="199.6555,-141.2446 201.8613,-130.8819 193.6747,-137.6072 199.6555,-141.2446"/>
+</g>
+<!-- E&#45;&gt;A -->
+<g class="edge">
+<title>E-&gt;A</title>
+<path fill="none" stroke="var(--text-color)" d="M123.0913,-32.4965C100.5302,-58.6212 60.3482,-113.6187 39.701,-146.3485"/>
+<polygon fill="var(--text-color)" stroke="var(--text-color)" points="36.6719,-144.5929 34.4263,-154.947 42.6387,-148.2532 36.6719,-144.5929"/>
+</g>
+<!-- E&#45;&gt;B -->
+<g class="edge">
+<title>E-&gt;B</title>
+<path fill="none" stroke="var(--text-color)" d="M112.1707,-20.7148C95.3958,-24.9058 73.816,-31.7789 56.5693,-38.3648"/>
+<polygon fill="var(--text-color)" stroke="var(--text-color)" points="54.9768,-35.2317 46.9845,-42.1868 57.5696,-41.7338 54.9768,-35.2317"/>
+</g>
+<!-- E&#45;&gt;C -->
+<g class="edge">
+<title>E-&gt;C</title>
+<path fill="none" stroke="var(--text-color)" d="M145.8325,-35.8757C155.0007,-51.6366 171.2294,-74.5366 184.9416,-91.3941"/>
+<polygon fill="var(--text-color)" stroke="var(--text-color)" points="182.3201,-93.7151 191.4288,-99.1264 187.6828,-89.2159 182.3201,-93.7151"/>
+</g>
+</g>
+</svg>
