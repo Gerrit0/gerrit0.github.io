@@ -5,6 +5,8 @@ date = 2023-11-12
 
 If you just want the tool: [Click here](#tool)
 
+Updated 2024-06-22, see [Updates](#update-2024-06-22)
+
 ## Introduction
 
 When exchanging gifts at Christmas, my extended family doesn't have everyone give to everyone,
@@ -115,7 +117,23 @@ The method for determining the score of a solution is also expensive, `O(# solut
 since it considers all previously discovered solutions. It might be worth changing this to only consider the
 previous N solutions, but again, it wasn't slow enough to be a problem with 12 people.
 
+## Update 2024-06-22
+
+It was recently pointed out to me that while retrieving every solution for this problem is exponential,
+it also lends itself very nicely to an alternative form which will produce a result without this problem.
+The trick is to recognize that we only ever need a small fraction of the valid results. People don't
+live long enough to see a full sequence of swaps for more than a small group!
+
+With that in mind, we can just pick a possible solution by shuffling the list of people and then
+either keep the result if it matches all of our criteria, or try again with another random solution.
+
+The tool below has been updated to use the random shuffle method if there are more than eight names.
+I arbitrarily picked `3 * # names` as a number of shuffles to try for each year, selecting the most
+optimal result from that year's set of shuffles.
+
 ## Tool
+
+All processing is done on your computer, no data is sent to any servers.
 
 Input the list of people to be included in the gift swap here, one per line:
 
@@ -134,8 +152,14 @@ D/E
 B/C
 </textarea>
 
-<button id="go">Go!</button>
-<button id="stop" disabled>Terminate search</button>
+<br>
+<br>
+<label>
+    Maximum number of years:
+    <input id="maxYears" type="number" value="50">
+</label>
+
+<button id="go">Find Solutions</button>
 
 Logs:
 
@@ -151,6 +175,5 @@ Logs:
     }
 </style>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js" integrity="sha512-vnRdmX8ZxbU+IhA2gLhZqXkX1neJISG10xy0iP0WauuClu3AIMknxyDjYHEpEhi8fTZPyOCWgqUCnEafDB/jVQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js" integrity="sha512-1zKK2bG3QY2JaUPpfHZDUMe3dwBwFdCDwXQ01GrKSd+/l0hqPbF+aak66zYPUZtn+o2JYi1mjXAqy5mW04v3iA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/lib/viz-standalone.js"></script>
 <script src="/gift-swapping.js" type="module"></script>

@@ -1,10 +1,194 @@
 // @ts-check
+
+/**
+ * @param {number} totalGivers
+ * @param {number[][]} disallowed
+ * @returns {number[][]}
+ */
+function findAllSolutions(totalGivers, disallowed) {
+  /** @type {number[][]} */
+  const solutions = [];
+
+  for (let i = 1; i < totalGivers; i++) {
+    if (!disallowed[0].includes(i)) {
+      buildSolution([i]);
+    }
+  }
+
+  return solutions;
+
+  /** @param {number[]} solutionSoFar */
+  function buildSolution(solutionSoFar) {
+    if (solutionSoFar.length === totalGivers) {
+      solutions.push(solutionSoFar);
+      return;
+    }
+
+    for (let target = 0; target < totalGivers; target++) {
+      if (
+        target !== solutionSoFar.length &&
+        !solutionSoFar.includes(target) &&
+        !disallowed[solutionSoFar.length].includes(target)
+      ) {
+        buildSolution([...solutionSoFar, target]);
+      }
+    }
+  }
+}
+
+/**
+ * @param {number[][]} chosenSolutions
+ * @param {number[][]} solutions
+ */
+function chooseNextBestSolution(chosenSolutions, solutions) {
+  let bestScoreSoFar = -Infinity;
+  let bestSolutionSoFar = solutions[0];
+
+  for (let i = 0, len = solutions.length; i < len; i++) {
+    const score = scoreSolution(solutions[i]);
+    if (bestScoreSoFar < score) {
+      bestScoreSoFar = score;
+      bestSolutionSoFar = solutions[i];
+    }
+  }
+
+  return bestSolutionSoFar;
+
+  /** @param {number[]} solution */
+  function scoreSolution(solution) {
+    let score = solution.length * 1000;
+
+    let penalty = 500;
+    for (let k = chosenSolutions.length - 1; k >= 0; k--) {
+      for (let i = 0; i < solution.length; i++) {
+        if (chosenSolutions[k][i] === solution[i]) {
+          score -= penalty;
+        }
+      }
+      penalty = penalty * 0.5;
+    }
+    return score;
+  }
+}
+
+/**
+ * Given a list of names and couples, build a table of indices
+ * which should not be allowed in a solution. Does _not_ include
+ * the index of the array.
+ * @param {string[]} names
+ * @param {string[][]} couples
+ */
+function buildDisallowedMatrix(names, couples) {
+  /** @type {number[][]} */
+  const disallowed = Array.from({ length: names.length }, () => []);
+  /** @type {string[]} */
+  const logs = [];
+
+  for (const [a, b] of couples) {
+    const ai = names.indexOf(a);
+    const bi = names.indexOf(b);
+    if (ai === -1) {
+      logs.push(`"${a}" is not in the list of gift givers`);
+    }
+    if (bi === -1) {
+      logs.push(`"${b}" is not in the list of gift givers`);
+    }
+
+    if (ai !== -1 && bi !== -1) {
+      disallowed[ai].push(bi);
+      disallowed[bi].push(ai);
+    }
+  }
+
+  return { disallowed, logs };
+}
+
+/**
+ * @param {string[]} names
+ * @param {string[][]} couples
+ * @param {number} maxSolutions
+ */
+function findSolution(names, couples, maxSolutions) {
+  const { disallowed, logs } = buildDisallowedMatrix(names, couples);
+
+  /** @type {number[][]} */
+  const chosenSolutions = [];
+
+  if (names.length < 9) {
+    const solutions = findAllSolutions(names.length, disallowed);
+    chosenSolutions.push(solutions[0]);
+    do {
+      chosenSolutions.push(chooseNextBestSolution(chosenSolutions, solutions));
+    } while (
+      chosenSolutions[0] !== chosenSolutions[chosenSolutions.length - 1] &&
+      chosenSolutions.length < maxSolutions
+    );
+  } else {
+    // Randomly pick solutions until we hit the limit.
+    chosenSolutions.push(chooseRandomSolution(names.length, disallowed));
+    do {
+      const solutions = Array.from({ length: names.length * 3 }, () => {
+        return chooseRandomSolution(names.length, disallowed);
+      });
+      chosenSolutions.push(chooseNextBestSolution(chosenSolutions, solutions));
+    } while (
+      // Can't use reference equality here as we generate new arrays each time.
+      chosenSolutions[0].some((t, i) => t != chosenSolutions[chosenSolutions.length - 1][i]) &&
+      chosenSolutions.length < maxSolutions
+    );
+  }
+
+  if (chosenSolutions[0].some((t, i) => t != chosenSolutions[chosenSolutions.length - 1][i])) {
+    logs.push(`Stopped out after ${maxSolutions} years of gift swaps without encountering a cycle.`);
+  } else {
+    logs.push(`There are ${chosenSolutions.length - 1} years before the cycle will repeat.`);
+  }
+
+  return { disallowed, solutions: chosenSolutions, logs };
+}
+
+/**
+ * @param {number} size
+ * @param {number[][]} disallowed
+ */
+function chooseRandomSolution(size, disallowed) {
+  const MAX_ATTEMPTS = 1000;
+  for (let i = 0; i < MAX_ATTEMPTS; ++i) {
+    const solution = randomArray(size);
+    if (solution.every((v, i) => v != i && !disallowed[i].includes(v))) {
+      return solution;
+    }
+  }
+  throw new Error(`Failed to find a possible solution in ${MAX_ATTEMPTS} attempts.`);
+}
+
+/** @param {number} size */
+function randomArray(size) {
+  const result = Array.from({ length: size }, (_, i) => i);
+  fisherYatesShuffle(result);
+  return result;
+}
+
+/** @param {unknown[]} arr */
+function fisherYatesShuffle(arr) {
+  for (let i = arr.length - 1; i > 0; --i) {
+    const j = Math.floor(Math.random() * arr.length);
+    [arr[j], arr[i]] = [arr[i], arr[j]];
+  }
+}
+
+/////////////////////////////////////////////////////////////////////////////
+/// Past here is the glue code to make the page work.
+/////////////////////////////////////////////////////////////////////////////
+
 const $ = (q) => document.body.querySelector(q);
 
 /** @type {HTMLTextAreaElement} */
 const $names = $("#names");
 /** @type {HTMLTextAreaElement} */
 const $couples = $("#couples");
+/** @type {HTMLInputElement} */
+const $maxYears = $("#maxYears");
 /** @type {HTMLElement} */
 const $messages = $("#messages");
 /** @type {HTMLElement} */
@@ -12,19 +196,8 @@ const $output = $("#output");
 
 /** @type {HTMLButtonElement} */
 const $go = $("#go");
-/** @type {HTMLButtonElement} */
-const $stop = $("#stop");
-
-/** @type {Worker | undefined} */
-let worker;
-const viz = new Viz();
 
 $go.addEventListener("click", updateSolution);
-$stop.addEventListener("click", () => {
-  worker?.terminate();
-  $names.disabled = $couples.disabled = $go.disabled = false;
-  $stop.disabled = true;
-});
 
 function getNames() {
   return $names.value
@@ -82,6 +255,8 @@ async function visualizeSolution(names, disallowed, solution) {
     "#444444": "transparent",
   };
 
+  // @ts-ignore
+  const viz = await Viz.instance();
   const element = await viz.renderSVGElement(lines.join("\n"), { engine: "circo" });
   element.querySelectorAll("*").forEach((el) => {
     for (const attr of el.attributes) {
@@ -95,6 +270,7 @@ async function visualizeSolution(names, disallowed, solution) {
 }
 
 function updateSolution() {
+  const startTime = Date.now();
   const names = getNames();
   const couples = getCouples();
 
@@ -112,57 +288,34 @@ function updateSolution() {
 
   const tbody = table.appendChild(document.createElement("tbody"));
 
-  if (names.length > 11) {
-    logMessage(`This will take a very long time. Your browser may kill the script before it finishes.`);
-  } else if (names.length === 11) {
-    logMessage(`This will take ~5 minutes`);
-  }
-
-  $stop.disabled = false;
   $go.disabled = $names.disabled = $couples.disabled = true;
-
-  let disallowed;
   const start = new Date().getFullYear();
 
-  worker?.terminate();
-  worker = new Worker("/gift-swapping-worker.js");
-  worker.onmessage = (event) => {
-    switch (event.data.type) {
-      case "message":
-        logMessage(event.data.message);
-        break;
-      case "disallowed":
-        disallowed = event.data.disallowed;
-        break;
-      case "solution": {
-        const tr = tbody.appendChild(document.createElement("tr"));
-        tr.appendChild(document.createElement("th")).textContent = (start + tbody.childElementCount - 1).toString();
-        for (const cell of event.data.solution) {
-          tr.appendChild(document.createElement("td")).textContent = names[cell];
-        }
+  const { disallowed, solutions, logs } = findSolution(names, couples, $maxYears.valueAsNumber);
+  logs.forEach(logMessage);
 
-        const actionsContainer = tr.appendChild(document.createElement("td"));
-        const visualize = actionsContainer.appendChild(document.createElement("button"));
-        visualize.textContent = "Visualize";
-        visualize.addEventListener("click", () => {
-          visualize.disabled = true;
-          visualize.textContent = "Loading...";
-          visualizeSolution(names, disallowed, event.data.solution).then((svg) => {
-            visualize.replaceWith(svg);
-          });
-        });
-        break;
-      }
-      case "done":
-        $go.disabled = $names.disabled = $couples.disabled = false;
-        $stop.disabled = true;
-        break;
+  for (const solution of solutions) {
+    const tr = tbody.appendChild(document.createElement("tr"));
+    tr.appendChild(document.createElement("th")).textContent = (start + tbody.childElementCount - 1).toString();
+    for (const cell of solution) {
+      tr.appendChild(document.createElement("td")).textContent = names[cell];
     }
-  };
 
-  worker.postMessage({ names, couples });
+    const actionsContainer = tr.appendChild(document.createElement("td"));
+    const visualize = actionsContainer.appendChild(document.createElement("button"));
+    visualize.textContent = "Visualize";
+    visualize.addEventListener("click", () => {
+      visualize.disabled = true;
+      visualize.textContent = "Loading...";
+      visualizeSolution(names, disallowed, solution).then((svg) => {
+        visualize.replaceWith(svg);
+      });
+    });
+  }
+
+  $go.disabled = $names.disabled = $couples.disabled = false;
+
+  logMessage(`Found solutions in ${Date.now() - startTime}ms`);
 }
 
-if (getNames().length < 9) {
-  updateSolution();
-}
+updateSolution();
