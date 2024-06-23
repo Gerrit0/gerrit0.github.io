@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head >
+    <meta charset="utf-8" />
+    <title>FLARE ON 2018 - Ultimate Minesweeper</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/main.css">
+    <script src="/theme.js" defer></script>
+    <script>document.documentElement.dataset.theme = localStorage.theme || 'os'</script>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  </head>
+
+  <body>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog">Posts</a></li>
+      </ul>
+      <select>
+        <option value="os">OS</option>
+        <option value="dark">Dark</option>
+        <option value="light">Light</option>
+      </select>
+    </nav>
+
+    <section class="section">
+      <div class="container">
+<h1 class="title">FLARE ON 2018 - Ultimate Minesweeper</h1>
+
+<p class="subtitle">2018-10-13</p>
+
+<p>This challenge reads:</p>
+<blockquote>
+<p>You hacked your way into the Minesweeper Championship, good job. Now its time to compete. Here is the Ultimate Minesweeper binary. Beat it, win the championship, and we'll move you on to greater challenges.</p>
+</blockquote>
+<p>After downloading and extracting the 7zip file, I ran the executable. This showed a 30x30 minesweeper game which is obviously rigged. After clicking on bombs for my first try twice, I gave up and opened the executable in <a href="https://github.com/0xd4d/dnSpy">dnSpy</a> to take a look at the source.</p>
+<p>There is a lot of information in dnSpy that isn't necessary for this challenge. I just drilled down until I got to the <code>MainForm</code> class. The <code>MainForm</code> class has a private method called <code>GetKey</code> which takes a <code>List&lt;uint&gt;</code> of the cells we clicked on. The method goes on to seed a random number generator with the first three clicked cells and uses that random sequence to generate the key. I didn't spend much time looking at this method since the 30x30 space is small enough to simply brute force.</p>
+<p><img src="/files/2018/10/ultimate-minesweeper.png" alt="dnSpy hierarchy" /></p>
+<p>I copied the <code>GetKey</code> method into a new C# project, wrote code to loop over each cell, started the program, and walked away. Less than 15 minutes later, I had my answer. The flag for level 2 is <code>Ch3aters_Alw4ys_W1n@flare-on.com</code>.</p>
+<p>If you are interested, here's the brute force program I threw together in order to discover the flag. There are several optimizations which could decrease the runtime, but it worked great for a quick hack!</p>
+<pre data-lang="cs" class="language-cs "><code class="language-cs" data-lang="cs">using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Minesweeper_Flag
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            const int rowMax = 30;
+            const int colMax = 30;
+
+            for (uint c1 = 0; c1 &lt; colMax; c1++)
+            {
+                for (uint r1 = 0; r1 &lt; rowMax; r1++)
+                {
+                    Console.WriteLine(c1 * colMax + r1 + &quot; &#x2F; &quot; + rowMax * colMax);
+                    for (uint c2 = 0; c2 &lt; colMax; c2++)
+                    {
+                        for (uint r2 = 0; r2 &lt; rowMax; r2++)
+                        {
+                            for (uint c3 = 0; c3 &lt; colMax; c3++)
+                            {
+                                for (uint r3 = 0; r3 &lt; rowMax; r3++)
+                                {
+                                    List&lt;uint&gt; rev = new List&lt;uint&gt;();
+                                    rev.Add(r1 * 30 + c1);
+                                    rev.Add(r2 * 30 + c2);
+                                    rev.Add(r3 * 30 + c3);
+                                    var key = GetKey(rev);
+                                    if (key.EndsWith(&quot;@flare-on.com&quot;))
+                                    {
+                                        Console.WriteLine(&quot;Found key: &quot; + key);
+                                        goto done;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            done:
+            Console.WriteLine(&quot;Finished!&quot;);
+            Console.ReadLine();
+        }
+
+        static string GetKey(List&lt;uint&gt; revealedCells)
+        {
+            revealedCells.Sort();
+            Random random = new Random(Convert.ToInt32(revealedCells[0] &lt;&lt; 20 | revealedCells[1] &lt;&lt; 10 | revealedCells[2]));
+            byte[] array = new byte[32];
+            byte[] array2 = new byte[]
+            {
+                245,
+                75,
+                65,
+                142,
+                68,
+                71,
+                100,
+                185,
+                74,
+                127,
+                62,
+                130,
+                231,
+                129,
+                254,
+                243,
+                28,
+                58,
+                103,
+                179,
+                60,
+                91,
+                195,
+                215,
+                102,
+                145,
+                154,
+                27,
+                57,
+                231,
+                241,
+                86
+            };
+            random.NextBytes(array);
+            uint num = 0u;
+            while ((ulong)num &lt; (ulong)((long)array2.Length))
+            {
+                byte[] array3 = array2;
+                uint num2 = num;
+                array3[(int)num2] = (byte)(array3[(int)num2] ^ array[(int)num]);
+                num += 1u;
+            }
+            return Encoding.ASCII.GetString(array2);
+        }
+    }
+}
+
+</code></pre>
+
+
+</div>
+    </section>
+
+    <footer>
+      <ul>
+        <li><a href="https://github.com/gerrit0">GitHub</a></li>
+      </ul>
+
+    </footer>
+  </body>
+</html>
