@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head >
+    <meta charset="utf-8" />
+    <title>Gerrit Music</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/main.css">
+    <script src="/theme.js" defer></script>
+    <script src="/music/stank-backup-crazily.js" defer></script>
+    <script>document.documentElement.dataset.theme = localStorage.theme || 'os'</script>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <style>
+      .container {
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+      }
+      #tracks {
+        max-height: 65vh;
+        overflow-y: auto;
+      }
+      .track {
+        padding: 0.25em;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1em;
+      }
+      .track:hover {
+        color: var(--link-color);
+      }
+      .track.current {
+        background-color: var(--secondary-background);
+      }
+      #player {
+        padding: 1em;
+      }
+      .options {
+        margin-top: 1em;
+        padding: 1em;
+        border: 1px solid var(--accent-color);
+      }
+      audio {
+        width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog">Posts</a></li>
+      </ul>
+      <select>
+        <option value="os">OS</option>
+        <option value="dark">Dark</option>
+        <option value="light">Light</option>
+      </select>
+    </nav>
+
+    <section class="section">
+      <div class="container">
+        <div id="tracks"></div>
+        <div id="player"></div>
+      </div>
+    </section>
+
+    <footer>
+      <ul>
+        <li><a href="https://github.com/gerrit0">GitHub</a></li>
+      </ul>
+    </footer>
+  </body>
+</html>

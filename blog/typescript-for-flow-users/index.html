@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head >
+    <meta charset="utf-8" />
+    <title>TypeScript for Flow Users</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/main.css">
+    <script src="/theme.js" defer></script>
+    <script>document.documentElement.dataset.theme = localStorage.theme || 'os'</script>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  </head>
+
+  <body>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog">Posts</a></li>
+      </ul>
+      <select>
+        <option value="os">OS</option>
+        <option value="dark">Dark</option>
+        <option value="light">Light</option>
+      </select>
+    </nav>
+
+    <section class="section">
+      <div class="container">
+<h1 class="title">TypeScript for Flow Users</h1>
+
+<p class="subtitle">2018-10-17</p>
+
+<p>Both Flow and TypeScript provide several utility types. Here I've taken Flow's <a href="https://flow.org/en/docs/types/utilities/">utility types</a> and compiled some examples to show the equivalent syntax in TypeScript. The examples are (mostly) taken straight from the Flow docs.</p>
+<p>Disclaimer: I don't use Flow. I may miss some less obvious features - please let me know if I do!</p>
+<h3 id="keys-t"><code>$Keys&lt;T&gt;</code><a class="zola-anchor" href="#keys-t" aria-label="Anchor link for: keys-t">🔗</a></h3>
+<p>TypeScript just uses <code>keyof</code>, though you could define <code>type $Keys&lt;T&gt; = keyof T</code></p>
+<pre data-lang="ts" class="language-ts "><code class="language-ts" data-lang="ts">const countries = {
+  US: &quot;United States&quot;,
+  IT: &quot;Italy&quot;,
+  FR: &quot;France&quot;,
+};
+
+type Country = keyof typeof countries; &#x2F;&#x2F; $Keys&lt;typeof countries&gt;
+const italy: Country = &quot;IT&quot;;
+const nope: Country = &quot;nope&quot;; &#x2F;&#x2F; Error
+</code></pre>
+<h3 id="values-t"><code>$Values&lt;T&gt;</code><a class="zola-anchor" href="#values-t" aria-label="Anchor link for: values-t">🔗</a></h3>
+<p>Easily defined as <code>T[keyof T]</code>, can be wrapped as <code>type $Values&lt;T&gt; = T[keyof T]</code> if desired.</p>
+<pre data-lang="ts" class="language-ts "><code class="language-ts" data-lang="ts">type Values&lt;T&gt; = T[keyof T]; &#x2F;&#x2F; $Values&lt;T&gt;
+
+type Props = {
+  name: string;
+  age: number;
+};
+
+&#x2F;&#x2F; The following two types are equivalent:
+type PropValues = string | number;
+type Prop$Values = Values&lt;Props&gt;;
+
+const name: Prop$Values = &quot;Jon&quot;; &#x2F;&#x2F; OK, if in a module context
+const age: Prop$Values = 42; &#x2F;&#x2F; OK
+const fn: Prop$Values = () =&gt; {}; &#x2F;&#x2F; Error
+</code></pre>
+<h3 id="readonly-t"><code>$ReadOnly&lt;T&gt;</code><a class="zola-anchor" href="#readonly-t" aria-label="Anchor link for: readonly-t">🔗</a></h3>
+<p>Can be easily defined using <a href="http://www.typescriptlang.org/docs/handbook/advanced-types.html#mapped-types">mapped types</a>. The TypeScript handbook actually provides it as an example!</p>
+<pre data-lang="ts" class="language-ts "><code class="language-ts" data-lang="ts">type Readonly&lt;T&gt; = {
+  readonly &#x2F;&#x2F; $Readonly&lt;T&gt;
+  [P in keyof T]: T[P];
+};
+
+type Props = {
+  name: string;
+  age: number;
+  &#x2F;&#x2F; ...
+};
+
+type ReadOnlyProps = Readonly&lt;Props&gt;;
+
+function render(props: ReadOnlyProps) {
+  const { name, age } = props; &#x2F;&#x2F; OK to read
+  props.age = 42; &#x2F;&#x2F; Error when writing
+}
+</code></pre>
+<h3 id="exact-t"><code>$Exact&lt;T&gt;</code><a class="zola-anchor" href="#exact-t" aria-label="Anchor link for: exact-t">🔗</a></h3>
+<p><code>$Exact&lt;T&gt;</code> doesn't quite make sense in TypeScript. If you specify the type of an object when defining an object literal, you will get an error if you try to provide more properties.</p>
+<pre data-lang="ts" class="language-ts "><code class="language-ts" data-lang="ts">type User = { name: string };
+const user: User = { name: &quot;name&quot;, age: 0 }; &#x2F;&#x2F; Error
+</code></pre>
+<p>However, it may sometimes be desirable to check later. In this case, it is possible to check if two types are exactly equal, and cause a type error if they are not. The <a href="https://www.npmjs.com/package/conditional-type-checks">conditional-type-checks</a> library makes this fairly painless. The <code>AssertTrue</code> and <code>IsExactType</code> types have been extracted from it for purposes of demonstration.</p>
+<pre data-lang="ts" class="language-ts "><code class="language-ts" data-lang="ts">type AssertTrue&lt;T extends true&gt; = never;
+type IsExactType&lt;T, U&gt; = Exclude&lt;T, U&gt; extends never
+  ? Exclude&lt;U, T&gt; extends never
+    ? true
+    : false
+  : false;
+
+type User = { name: string };
+const user = { name: &quot;name&quot;, age: 0 };
+{
+  &#x2F;&#x2F; Scope so that ExactCheck doesn&#x27;t show up anywhere else
+  type ExactCheck = AssertTrue&lt;IsExactType&lt;User, typeof user&gt;&gt;; &#x2F;&#x2F; Error
+}
+</code></pre>
+<h3 id="diff-a-b"><code>$Diff&lt;A, B&gt;</code><a class="zola-anchor" href="#diff-a-b" aria-label="Anchor link for: diff-a-b">🔗</a></h3>
+<p><code>Diff</code> in TypeScript is commonly used for union types, however the <code>$Diff</code> defined by Flow can easily be defined in TypeScript as well.</p>
+<p>There are three similar ways to represent <code>$Diff</code>, each has its advantages. While <code>$Diff2</code> below is closer to the diff used by Flow, the <code>$Diff</code> implementation below is safer.</p>
+<pre data-lang="ts" class="language-ts "><code class="language-ts" data-lang="ts">type $Diff&lt;A, B extends Partial&lt;A&gt;&gt; = {
+  [K in Exclude&lt;keyof A, keyof B&gt;]: A[K];
+} &amp; {
+  [K in keyof A &amp; keyof B]?: A[K];
+};
+
+type $Diff2&lt;A, B extends Partial&lt;A&gt;&gt; = $Diff&lt;A, B&gt; &amp; {
+  [K: string]: any;
+};
+
+type Props = { name: string; age: number };
+type DefaultProps = { age: number };
+type RequiredProps = $Diff&lt;Props, DefaultProps&gt;;
+type RequiredProps2 = $Diff2&lt;Props, RequiredProps&gt;;
+
+declare function setProps(props: RequiredProps);
+declare function setProps2(props: RequiredProps2);
+
+setProps({ name: &quot;foo&quot; });
+setProps2({ name: &quot;foo&quot; });
+
+setProps({ name: &quot;foo&quot;, age: 42, baz: false }); &#x2F;&#x2F; Error
+setProps2({ name: &quot;foo&quot;, age: 42, baz: false }); &#x2F;&#x2F; Ok, as in Flow
+
+setProps({ age: 42 }); &#x2F;&#x2F; Error
+setProps2({ age: 42 }); &#x2F;&#x2F; Error
+</code></pre>
+<p>Note that the above <code>$Diff</code> implementations will <em>not</em> complain if you try to remove properties which do not exist in <code>A</code>. There isn't a standard way to raise a compile time type error in TypeScript, but it can be achieved by resolving the type to <code>never</code> and causing an error where we try to assign an object to <code>never</code>.</p>
+<pre data-lang="ts" class="language-ts "><code class="language-ts" data-lang="ts">type $Diff3&lt;A, B extends Partial&lt;A&gt;&gt; = keyof B extends keyof A
+  ? {
+      [K in Exclude&lt;keyof A, keyof B&gt;]: A[K];
+    } &amp; {
+      [K in keyof A &amp; keyof B]?: A[K];
+    } &amp; {
+      [K: string]: any;
+    }
+  : never;
+
+type Props = { name: string; age: number };
+type DefaultProps = { age: number };
+type DefaultPropsBroken = { age: number; other: string | undefined };
+type RequiredProps = $Diff3&lt;Props, DefaultProps&gt;;
+type RequiredPropsBroken = $Diff3&lt;Props, DefaultPropsBroken&gt;;
+
+declare function setProps(props: RequiredProps);
+declare function setPropsBroken(props: RequiredPropsBroken);
+
+setProps({ name: &quot;foo&quot; }); &#x2F;&#x2F; Still Ok
+setPropsBroken({ name: &quot;foo&quot; }); &#x2F;&#x2F; Error
+</code></pre>
+<p>However, this implementation still does not quite match Flow's <code>$Diff</code> type. In Flow's <code>$Diff</code> type, Flow will allow keys that don't exist in <code>A</code> to exist in <code>B</code> if they are defined with <code>| void</code>. TypeScript's equivalent is <code>| undefined</code>, so here's one last implementation.</p>
+<pre data-lang="ts" class="language-ts "><code class="language-ts" data-lang="ts">type RequiredKeys&lt;T&gt; = Exclude&lt;
+  {
+    [K in keyof T]: undefined extends T[K] ? never : K;
+  }[keyof T],
+  undefined
+&gt;;
+
+type $Diff4&lt;A, B extends Partial&lt;A&gt;&gt; = RequiredKeys&lt;B&gt; extends keyof A
+  ? {
+      [K in Exclude&lt;keyof A, keyof B&gt;]: A[K];
+    } &amp; {
+      [K in keyof A &amp; keyof B]?: A[K];
+    } &amp; {
+      [K: string]: any;
+    }
+  : never;
+
+type Props = { name: string; age: number };
+type DefaultProps = { age: number; other?: string };
+type DefaultPropsBroken = { age: number; other: string };
+
+type RequiredProps = $Diff4&lt;Props, DefaultProps&gt;;
+type RequiredPropsBroken = $Diff4&lt;Props, DefaultPropsBroken&gt;;
+
+declare function setProps(props: RequiredProps): void;
+declare function setPropsBroken(props: RequiredPropsBroken): void;
+
+setProps({ name: &quot;foo&quot; }); &#x2F;&#x2F; Still Ok, other is optional
+setPropsBroken({ name: &quot;foo&quot; }); &#x2F;&#x2F; Error
+</code></pre>
+<h3 id="rest-a-b"><code>$Rest&lt;A, B&gt;</code><a class="zola-anchor" href="#rest-a-b" aria-label="Anchor link for: rest-a-b">🔗</a></h3>
+<p><code>$Rest</code> is much simpler to represent with TypeScript. <code>$Rest&lt;A, B&gt;</code> returns an object with <code>A</code>'s properties that are not <code>B</code>'s properties. Following Flow's behavior, the remaining properties are marked optional.</p>
+<pre data-lang="ts" class="language-ts "><code class="language-ts" data-lang="ts">type Rest&lt;A, B extends Partial&lt;A&gt;&gt; = {
+  [K in Exclude&lt;keyof A, keyof B&gt;]?: A[K];
+};
+
+type JustA = Rest&lt;{ a: string; b: number }, { b: number }&gt;;
+type JustB = Rest&lt;{ a: string; b: number }, { a: string }&gt;;
+</code></pre>
+<h3 id="propertytype-t-k-elementtype-t-k"><code>$PropertyType&lt;T, k&gt;, $ElementType&lt;T, K&gt;</code><a class="zola-anchor" href="#propertytype-t-k-elementtype-t-k" aria-label="Anchor link for: propertytype-t-k-elementtype-t-k">🔗</a></h3>
+<p>Like <code>$Keys</code>, there's not much point in defining this in TypeScript. You can just use <code>T['key']</code>.</p>
+<pre data-lang="ts" class="language-ts "><code class="language-ts" data-lang="ts">type $PropertyType&lt;T, K extends keyof T&gt; = T[K];
+
+type Person = {
+  name: string;
+  age: number;
+  parent: Person;
+};
+
+const newName: $PropertyType&lt;Person, &quot;name&quot;&gt; = &quot;Michael Jackson&quot;;
+const newAge: $PropertyType&lt;Person, &quot;age&quot;&gt; = 50;
+const newParent: $PropertyType&lt;Person, &quot;parent&quot;&gt; = &quot;Joe Jackson&quot;; &#x2F;&#x2F; Error
+</code></pre>
+<h3 id="nonmaybetype-t"><code>$NonMaybeType&lt;T&gt;</code><a class="zola-anchor" href="#nonmaybetype-t" aria-label="Anchor link for: nonmaybetype-t">🔗</a></h3>
+<p>This can be trivially implemented using the built in <code>Exclude</code>.</p>
+<pre data-lang="ts" class="language-ts "><code class="language-ts" data-lang="ts">type NonMaybeType&lt;T&gt; = Exclude&lt;T, null | undefined&gt;;
+
+type MaybeString = string | undefined | null;
+type DefinitelyString = NonMaybeType&lt;MaybeString&gt;; &#x2F;&#x2F; =&gt; string
+</code></pre>
+<h3 id="objtype-t-f-tuplemap-t-f"><code>$ObjType&lt;T, F&gt;, $TupleMap&lt;T, F&gt;</code><a class="zola-anchor" href="#objtype-t-f-tuplemap-t-f" aria-label="Anchor link for: objtype-t-f-tuplemap-t-f">🔗</a></h3>
+<p>This is a bit more complicated, TypeScript doesn't have the ability to &quot;call&quot; a function type like Flow does, but it should be possible to write types which provide the same behavior.</p>
+<p>Here's a few examples, taken from the Flow docs and translated to TypeScript.</p>
+<pre data-lang="ts" class="language-ts "><code class="language-ts" data-lang="ts">&#x2F;&#x2F; Run
+declare function run&lt;O extends { [key: string]: () =&gt; any }&gt;(
+  o: O
+): { [K in keyof O]: ReturnType&lt;O[K]&gt; };
+
+const o = {
+  a: () =&gt; true,
+  b: () =&gt; &quot;foo&quot;,
+};
+
+const a: boolean = run(o).a; &#x2F;&#x2F; Ok
+const b: string = run(o).b; &#x2F;&#x2F; Ok
+const b2: boolean = run(o).b; &#x2F;&#x2F; Error
+const c = run(o).c; &#x2F;&#x2F; Error, c doesn&#x27;t exist
+
+&#x2F;&#x2F; Props
+type PromiseType&lt;T&gt; = T extends PromiseLike&lt;infer U&gt; ? U : never;
+
+declare function props&lt;O extends { [key: string]: Promise&lt;any&gt; }&gt;(
+  promises: O
+): Promise&lt;{ [K in keyof O]: PromiseType&lt;O[K]&gt; }&gt;;
+
+const promises = { a: Promise.resolve(42) };
+props(promises).then((o) =&gt; {
+  const a: number = o.a; &#x2F;&#x2F; Ok, not 42 like in Flow.
+});
+
+&#x2F;&#x2F; Tuple Run
+&#x2F;&#x2F; Unfortunately this only works when arr functions return a single type.
+declare function run&lt;T extends Array&lt;() =&gt; any&gt;&gt;(
+  iter: T
+): ReturnType&lt;T[number]&gt;;
+
+const arr = [() =&gt; &quot;foo&quot;, () =&gt; &quot;bar&quot;];
+const a: string = run(arr)[0];
+const b: string = run(arr)[1];
+const c: boolean = run(arr)[1]; &#x2F;&#x2F; Error
+</code></pre>
+<h3 id="call-f"><code>$Call&lt;F&gt;</code><a class="zola-anchor" href="#call-f" aria-label="Anchor link for: call-f">🔗</a></h3>
+<p>It isn't currently possible to completely represent <code>$Call</code> with TypeScript as it requires support for <a href="https://github.com/Microsoft/TypeScript/issues/5453">variadic kinds</a>, which has been on the roadmap for several versions. However, for functions with a static return type, it is possible to use the built in <code>ReturnType&lt;T&gt;</code> to extract a the return type of a function.</p>
+<h3 id="class-t"><code>Class&lt;T&gt;</code><a class="zola-anchor" href="#class-t" aria-label="Anchor link for: class-t">🔗</a></h3>
+<p>Is not quite possible in TypeScript, there's no way to recover the constructor type from any instance type. (<code>T['constructor']</code> is just <code>Function</code>)</p>
+<p>However, it is mostly unnecessary in TypeScript, just use <code>typeof</code> and the class name.</p>
+<pre data-lang="ts" class="language-ts "><code class="language-ts" data-lang="ts">class Store {}
+class ExtendedStore extends Store {}
+class Model {}
+
+declare function makeStore(storeClass: typeof Store): Store;
+
+makeStore(Store);
+makeStore(ExtendedStore);
+&#x2F;&#x2F; To make this error, add a property to Store that is not in Model.
+makeStore(Model); &#x2F;&#x2F; No error
+</code></pre>
+<h3 id="shape-t"><code>$Shape&lt;T&gt;</code><a class="zola-anchor" href="#shape-t" aria-label="Anchor link for: shape-t">🔗</a></h3>
+<p>Is identical to <code>Partial&lt;T&gt;</code> in TypeScript.</p>
+
+
+</div>
+    </section>
+
+    <footer>
+      <ul>
+        <li><a href="https://github.com/gerrit0">GitHub</a></li>
+      </ul>
+
+    </footer>
+  </body>
+</html>
