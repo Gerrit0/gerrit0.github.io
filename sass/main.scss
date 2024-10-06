@@ -107,6 +107,10 @@ footer {
 ul.posts {
   margin: 20px auto 40px;
 }
+ul.posts .date {
+  font-family: monospace;
+  font-size: 120%;
+}
 img {
   max-width: 100%;
 }

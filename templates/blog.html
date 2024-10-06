@@ -11,7 +11,7 @@ Posts
 <ul class="posts">
   {% for page in section.pages %}
   <li>
-    {{ page.date | date(format="%-d %b %Y") }}
+    <span class="date">{{ page.date | date(format="%-d %b %Y") }}</span>
     &raquo;
     <a href="{{ page.permalink | safe }}">{{ page.title }}</a>
   </li>
