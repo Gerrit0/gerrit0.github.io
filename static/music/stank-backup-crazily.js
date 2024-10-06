@@ -66,6 +66,7 @@ const $player = document.getElementById("player");
 
 const options = {
   shuffle: localStorage.getItem(PREFIX + "shuffle") === "true",
+  wakeLock: localStorage.getItem(PREFIX + "wakeLock") === "true",
 };
 
 const $audio = $player.appendChild(document.createElement("audio"));
@@ -84,15 +85,56 @@ next.addEventListener("click", playNext);
 const $options = $player.appendChild(document.createElement("div"));
 $options.classList.add("options");
 
-const $shuffle = $options.appendChild(document.createElement("label"));
-const $shuffleCheck = $shuffle.appendChild(document.createElement("input"));
-$shuffleCheck.type = "checkbox";
-$shuffleCheck.addEventListener("input", () => {
-  options.shuffle = $shuffleCheck.checked;
-  localStorage.setItem(PREFIX + "shuffle", options.shuffle);
-});
-$shuffleCheck.checked = options.shuffle;
-$shuffle.append(document.createTextNode("Shuffle"));
+function createInput(name, storageName) {
+  const $wrapper = $options.appendChild(document.createElement("label"));
+  const $check = $wrapper.appendChild(document.createElement("input"));
+  $check.type = "checkbox";
+  $check.addEventListener("input", () => {
+    options[storageName] = $check.checked;
+    localStorage.setItem(PREFIX + storageName, options[storageName]);
+  });
+  $check.checked = options[storageName];
+  $wrapper.append(document.createTextNode(name));
+  $options.appendChild(document.createElement("br"));
+  return $check;
+}
+
+createInput("Shuffle", "shuffle");
+
+if ("wakeLock" in navigator) {
+  const $wakeLock = createInput("Wake Lock", "wakeLock");
+  $wakeLock.parentElement.appendChild(document.createTextNode(" "));
+  const $status = $wakeLock.parentElement.appendChild(document.createTextNode("(not acquired)"));
+  /** @type {WakeLockSentinel | undefined} */
+  let lock = null;
+
+  const updateLock = () => {
+    if (options.wakeLock && !lock) {
+      navigator.wakeLock
+        .request("screen")
+        .then((sentinel) => {
+          $status.textContent = "(acquired)";
+          lock = sentinel;
+          lock.addEventListener("release", () => {
+            $status.textContent = "(not acquired)";
+            lock = null;
+          });
+        })
+        .catch((err) => {
+          $status.textContent = `(not acquired: ${err.message})`;
+        });
+    } else if (!options.wakeLock && lock) {
+      lock.release().then(() => {
+        lock = null;
+      });
+    }
+  };
+
+  $wakeLock.addEventListener("change", updateLock);
+  updateLock();
+
+  document.addEventListener("visibilitychange", updateLock);
+}
 
 function playNext() {
   let nextIndex;
