@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head >
+    <meta charset="utf-8" />
+    <title>FLARE ON 2018 - Minesweeper Championship Registration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/main.css">
+    <script src="/theme.js" defer></script>
+    <script>document.documentElement.dataset.theme = localStorage.theme || 'os'</script>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  </head>
+
+  <body>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog">Posts</a></li>
+      </ul>
+      <select>
+        <option value="os">OS</option>
+        <option value="dark">Dark</option>
+        <option value="light">Light</option>
+      </select>
+    </nav>
+
+    <section class="section">
+      <div class="container">
+<h1 class="title">FLARE ON 2018 - Minesweeper Championship Registration</h1>
+
+<p class="subtitle">2018-10-13</p>
+
+<p>This is the first year I heard about the FLARE-On CTF by FireEye, which this year ran from August 24 through October 5. There were a total of 12 levels, of which I was able to complete 3. I got roughly a third of the way through the fourth challenge before getting distracted with PicoCTF.</p>
+<p>Let's get started! The first challenge reads:</p>
+<blockquote>
+<p>Welcome to the Fifth Annual Flare-On Challenge! The Minesweeper World Championship is coming soon and we found the registration app. You weren't officially invited but if you can figure out what the code is you can probably get in anyway. Good luck!</p>
+</blockquote>
+<p>An encrypted <code>.7z</code> file is provided. Once downloaded and extracted, we are left with a <code>MinesweeperChampionshipRegistration.jar</code> file. I didn't even bother running it. Googling <code>java decompiler</code> brought me to http://www.javadecompilers.com, where I was able to upload the jar and receive a single file in return:</p>
+<pre data-lang="java" class="language-java "><code class="language-java" data-lang="java">import javax.swing.JOptionPane;
+
+public class InviteValidator {
+  public InviteValidator() {}
+
+  public static void main(String[] args) { String response = JOptionPane.showInputDialog(null, &quot;Enter your invitation code:&quot;, &quot;Minesweeper Championship 2018&quot;, 3);
+    if (response.equals(&quot;GoldenTicket2018@flare-on.com&quot;))
+    {
+      JOptionPane.showMessageDialog(null, &quot;Welcome to the Minesweeper Championship 2018!\nPlease enter the following code to the ctfd.flare-on.com website to compete:\n\n&quot; + response, &quot;Success!&quot;, -1);
+    }
+    else
+    {
+      JOptionPane.showMessageDialog(null, &quot;Incorrect invitation code. Please try again next year.&quot;, &quot;Failure&quot;, 0);
+    }
+  }
+}
+</code></pre>
+<p>The first flag is obviously <code>GoldenTicket2018@flare-on.com</code>.</p>
+
+
+</div>
+    </section>
+
+    <footer>
+      <ul>
+        <li><a href="https://github.com/gerrit0">GitHub</a></li>
+      </ul>
+
+    </footer>
+  </body>
+</html>
