@@ -5,8 +5,6 @@ template = "index.html"
 
 # Hello, I'm Gerrit
 
-I am a graduate of The University of Colorado, Colorado Springs and am an avid programmer.
-
 I work as a software engineer and on [TypeDoc](https://typedoc.org) on the weekends.
 
 ### Languages

@@ -1,5 +1,9 @@
 @import "./theme.scss";
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 60px auto;
   width: 70%;
@@ -113,6 +117,51 @@ ul.posts .date {
 }
 img {
   max-width: 100%;
+}
+
+blockquote {
+  border-left: 2px inset var(--accent-color);
+  padding: 1em;
+  margin-left: 1em;
+  background: rgba(0, 0, 0, 0.1);
+}
+blockquote > p:first-child,
+blockquote > p:last-child {
+  margin-top: 0;
+}
+
+code {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 85%;
+  padding: 0.2em 0.4em;
+  margin: 0;
+  white-space: break-spaces;
+  border-radius: 6px;
+  background: var(--secondary-background);
+}
+pre:has(code) {
+  padding: 0.4em;
+}
+pre > code {
+  background: inherit;
+}
+
+.footnote-definition {
+  border-left: 2px inset var(--accent-color);
+  border-top: 2px inset var(--accent-color);
+  background: rgba(0, 0, 0, 0.1);
+  padding: 0.5em;
+  margin-left: 1em;
+  font-size: 80%;
+}
+.footnote-definition > p:last-child {
+  margin-bottom: 0;
+}
+.footnote-definition-label::before {
+  content: "#";
+}
+.footnote-definition-label {
+  float: left;
 }
 
 /* Header links */
