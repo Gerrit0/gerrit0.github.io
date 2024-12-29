@@ -25,7 +25,8 @@ a:hover {
 }
 
 p,
-ul {
+ul,
+ol {
   font-size: 1.2em;
   line-height: 1.4em;
 }
@@ -141,9 +142,17 @@ code {
 }
 pre:has(code) {
   padding: 0.4em;
+  position: relative;
+  border: 1px solid var(--accent-color);
 }
 pre > code {
   background: inherit;
+  padding: 0;
+}
+.copy-button {
+  position: absolute;
+  top: 0.5em;
+  right: 0.5em;
 }
 
 .footnote-definition {
