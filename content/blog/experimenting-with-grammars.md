@@ -41,7 +41,7 @@ There are several JavaScript parser generators available, but I decided to use [
 
 I've found that the best way to experiment with a parser is to toss it into the [parser playground](https://omrelli.ug/nearley-playground/) and create a few tests. The first step is to accept single numbers and comma separated numbers.
 
-```nearley
+```
 main -> problems {\% d => JSON.stringify(d[0]) \%}
 
 problems ->
@@ -55,7 +55,7 @@ number -> [0-9]:+ {\% d => +d[0].join('') \%}
 
 This parser is rather restrictive, it won't let you include spaces anywhere, so let's fix that. Convention is to use `_` for whitespace. According to the [How to grammar good](https://nearley.js.org/docs/how-to-grammar-good#postprocess-or-dispose) guide, this rule should return null to throw away the parsed value.
 
-```nearley
+```
 main -> _ problems _ {\% d => JSON.stringify(d[1]) \%}
 
 problems ->
@@ -71,7 +71,7 @@ _ -> [\s]:* {\% () => null \%}
 
 Next up, let's extend the parser to also accept problem parts, so `1a, b` is now a valid problem. This isn't too difficult, if you do it the right way.
 
-```nearley
+```
 main -> _ problems _ {\% d => JSON.stringify(d[1]) \%}
 
 problems ->
@@ -95,7 +95,7 @@ In my first implementation of this parser, I forgot that I could use the `:?` EB
 
 Now all that's left is to handle problem ranges, this is also simple since ranges can't have `parts`.
 
-```nearley
+```
 main -> _ problems {\% d => JSON.stringify(d[1]) \%}
 
 problems ->

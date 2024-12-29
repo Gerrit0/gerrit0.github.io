@@ -12,7 +12,7 @@ Downloading the 7zip file and extracting it presents us with a long list of exec
 
 I tried loading one of the executables in [dnSpy](https://github.com/0xd4d/dnSpy), but found that these executables were not compiled to MSIL. I poked around in [Ida](https://www.hex-rays.com/products/ida/support/download_freeware.shtml) for a bit but didn't notice anything immediately obvious until I scrolled randomly through the hex view tab. Here, I got lucky and noticed some strings:
 
-```text
+```txt
 00001920: 1840 4000 6840 4000 4200 5200 4900 4300  .@@.h@@.B.R.I.C.
 00001930: 4b00 0000 2500 7300 5c00 2500 7300 0000  K...%.s.\.%.s...
 00001940: 4900 7200 6f00 6e00 4d00 6100 6e00 5300  I.r.o.n.M.a.n.S.
@@ -41,7 +41,7 @@ I tried loading one of the executables in [dnSpy](https://github.com/0xd4d/dnSpy
 
 Well this is interesting! If you are familiar with how strings are stored in C, you will know that `0x00` ends a string. The program `strings` uses this and the ASCII range to search for strings in binary files. The strings above do not follow this pattern and thus would not have been found if I had even thought to try it out (without some flags to make it look for two byte wide characters). Instead, each character is followed by a null byte and it takes two null bytes to end a string. Now that I was aware of this, I kept scrolling through the file and found more text later.
 
-```text
+```txt
 00002aa0: 0500 4200 5200 4900 4300 4b00 0000 0000  ..B.R.I.C.K.....
 00002ab0: 3800 4500 7400 6d00 6300 3000 4400 4100  8.E.t.m.c.0.D.A.
 00002ac0: 4600 3800 5100 7600 0000 0000 0000 0000  F.8.Q.v.........
@@ -49,7 +49,7 @@ Well this is interesting! If you are familiar with how strings are stored in C, 
 
 Manually extracting `8Etmc0DAF8Qv` from this string and providing it as the password when running the program told me that I was on the right track. This was the password! Of course, each file has a different password.
 
-```text
+```txt
 C:\Users\Gerrit\Downloads\FLEGGO\FLEGGO>y77GmQGdwVL7Fc9mMdiLJMgFQ8rgeSrl.exe
 What is the password?
 8Etmc0DAF8Qv
@@ -67,7 +67,7 @@ $ diff --suppress-common-lines -y <(xxd 1BpnGjHOT7h5vvZsV4vISSb60Xj3pX5G.exe) <(
 
 Doing this revealed that the password strings were at the exact same location in each file, which makes extracting the passwords with a script much simpler. I threw together a bit of python to extract the password, run each program, and grab the output.
 
-```python3
+```python
 import glob
 from subprocess import PIPE, run
 import os
@@ -103,7 +103,7 @@ for f, p, o in s:
 
 Running this script gives the following output:
 
-```text
+```txt
 File                                 | Password         | Output
 y77GmQGdwVL7Fc9mMdiLJMgFQ8rgeSrl.exe | 8Etmc0DAF8Qv     | 12268605.png => s
 HDHugJBqTJqKKVtqi3sfR4BTq6P5XLZY.exe | 45psrewIRS       | 13147895.png => w

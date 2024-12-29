@@ -12,7 +12,7 @@ One of my favorite challenges was "script me". The problem reads:
 
 The problem also provides a `nc` command to connect to the problem server. Connecting to the server will give output similar to this:
 
-```text
+```txt
 Rules:
 () + () = ()()                                      => [combine]
 ((())) + () = ((())())                              => [absorb-right]
