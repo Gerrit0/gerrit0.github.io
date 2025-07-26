@@ -104,41 +104,38 @@ ended up with the following implementation. Notable design considerations:
 
 #include <cmath>
 #include <bit>
-
-namespace detail
-{
+namespace detail {
     size_t constexpr pow(size_t base, size_t exponent)
     {
         return exponent == 0 ? 1 : base * pow(base, exponent - 1);
     }
-}
+} // namespace detail
 
 template <size_t WIDTH, size_t PRECISION>
-void format_fixed(char *data, double value)
+void format_fixed(char* data, double value)
 {
     static_assert(WIDTH > PRECISION + 1);
     // -1 for decimal point
     constexpr auto INTEGER_WIDTH = WIDTH - PRECISION - 1;
 
-    constexpr auto MAX_VALUE = (detail::pow(10, WIDTH - 1) - 1.0) / detail::pow(10, PRECISION);
-    constexpr auto MIN_VALUE = -(detail::pow(10, WIDTH - 2) - 1.0) / detail::pow(10, PRECISION);
-
-    // To support more than 9 we need to use a bigger int type
-    // I haven't ever needed widths/precisions less than the lower bound here
-    using TNum = int;
+    // Handling wider numbers requires a larger integer type than
+    // 64 bit used in this implementation.
     static_assert(2 <= INTEGER_WIDTH && INTEGER_WIDTH <= 9);
     static_assert(2 <= PRECISION && PRECISION <= 9);
 
-    if (std::isnan(value))
-    {
-        for (size_t i = 0; i < WIDTH - 3; ++i)
-        {
+    constexpr auto PRECISION10 = detail::pow(10, PRECISION);
+    constexpr auto MAX_VALUE = (detail::pow(10, WIDTH - 1) - 1.0) / PRECISION10;
+    constexpr auto MIN_VALUE = -(detail::pow(10, WIDTH - 2) - 1.0) / PRECISION10;
+
+    // We do this instead of comparing against zero to catch -nan and -0.0
+    const bool negative = std::bit_cast<uint64_t>(value) >> 63;
+
+    if (std::isnan(value)) {
+        for (size_t i = 0; i < WIDTH - 3; ++i) {
             *data = ' ';
             ++data;
         }
-        // Check the sign bit to determine if this is nan or -nan
-        if (std::bit_cast<uint64_t>(value) >> 63)
-        {
+        if (negative) {
             *(data - 1) = '-';
         }
 
@@ -155,15 +152,23 @@ void format_fixed(char *data, double value)
     value = std::min(std::max(MIN_VALUE, value), MAX_VALUE);
 
     char fill = ' ';
-    auto number = static_cast<TNum>(std::abs(value));
-    auto numberOrig = number;
 
-    auto digit = [&](int offset)
+    // Now turn the double into a fixed point representation, the
+    // static_asserts earlier ensure this will fit.
+    auto number = static_cast<uint_fast64_t>(std::abs(value)) * PRECISION10;
     {
-        if (number > offset - 1)
-        {
-            if (fill == ' ' && value < 0.0)
-            {
+        double fractionalPart = std::abs(value) - std::floor(std::abs(value));
+        fractionalPart *= PRECISION10;
+        uint_fast64_t fractionalFixed = static_cast<uint_fast64_t>(fractionalPart);
+        if (fractionalPart - std::floor(fractionalPart) >= 0.5) {
+            fractionalFixed += 1;
+        }
+        number += fractionalFixed;
+    }
+
+    auto digit = [&](uint_fast64_t offset) {
+        if (number > offset - 1) {
+            if (fill == ' ' && negative) {
                 *(data - 1) = '-';
             }
             fill = '0';
@@ -173,68 +178,55 @@ void format_fixed(char *data, double value)
             // which gives us both a quotient (to be written)
             // and a remainder (the next value of number)
             // However, in experimentation this has shown to be nearly 50% slower!
-            TNum digit = number / offset;
-            number -= digit * offset;
-            *data = static_cast<char>('0' + digit);
+            auto dat = number / offset;
+            number -= dat * offset;
+            *data = static_cast<char>('0' + dat);
             ++data;
-        }
-        else
-        {
+        } else {
             *data = fill;
             ++data;
         }
     };
 
     // First, the integer part.
-    if constexpr (INTEGER_WIDTH > 8)
-        digit(100'000'000); // 9
-    if constexpr (INTEGER_WIDTH > 7)
-        digit(10'000'000); // 8
-    if constexpr (INTEGER_WIDTH > 6)
-        digit(1'000'000); // 7
-    if constexpr (INTEGER_WIDTH > 5)
-        digit(100'000); // 6
-    if constexpr (INTEGER_WIDTH > 4)
-        digit(10'000); // 5
-    if constexpr (INTEGER_WIDTH > 3)
-        digit(1'000); // 4
-    if constexpr (INTEGER_WIDTH > 2)
-        digit(100); // 3
-    digit(10);      // 2
+    if constexpr (INTEGER_WIDTH > 8) digit(100'000'000 * PRECISION10); // 9
+    if constexpr (INTEGER_WIDTH > 7) digit(10'000'000 * PRECISION10); // 8
+    if constexpr (INTEGER_WIDTH > 6) digit(1'000'000 * PRECISION10); // 7
+    if constexpr (INTEGER_WIDTH > 5) digit(100'000 * PRECISION10); // 6
+    if constexpr (INTEGER_WIDTH > 4) digit(10'000 * PRECISION10); // 5
+    if constexpr (INTEGER_WIDTH > 3) digit(1'000 * PRECISION10); // 4
+    if constexpr (INTEGER_WIDTH > 2) digit(100 * PRECISION10); // 3
+    digit(10 * PRECISION10); // 2
 
-    // If we haven't written the negative sign yet, do so now as we'll always write at least one digit
-    if (fill == ' ' && value < 0.0)
-    {
+    // If we haven't written the negative sign yet, do so now as we'll always
+    // write at least one digit
+    if (fill == ' ' && negative) {
         *(data - 1) = '-';
     }
 
     // Unconditionally write at least one digit before the decimal point
-    *data = static_cast<char>('0' + number); // 1
-    ++data;
+    {
+        auto dat = number / PRECISION10;
+        number -= dat * PRECISION10;
+        *data = static_cast<char>('0' + dat);
+        ++data;
+    }
 
     // Decimal point
     *data = '.';
     ++data;
 
-    // And the fractional part
-    number = static_cast<TNum>(std::floor((std::abs(value) - numberOrig) * detail::pow(10, PRECISION) + 0.49));
+    // Write the fractional part
     fill = '0';
 
-    if constexpr (PRECISION > 8)
-        digit(100'000'000); // 9
-    if constexpr (PRECISION > 7)
-        digit(10'000'000); // 8
-    if constexpr (PRECISION > 6)
-        digit(1'000'000); // 7
-    if constexpr (PRECISION > 5)
-        digit(100'000); // 6
-    if constexpr (PRECISION > 4)
-        digit(10'000); // 5
-    if constexpr (PRECISION > 3)
-        digit(1'000); // 4
-    if constexpr (PRECISION > 2)
-        digit(100);                          // 3
-    digit(10);                               // 2
+    if constexpr (PRECISION > 8) digit(100'000'000); // 9
+    if constexpr (PRECISION > 7) digit(10'000'000); // 8
+    if constexpr (PRECISION > 6) digit(1'000'000); // 7
+    if constexpr (PRECISION > 5) digit(100'000); // 6
+    if constexpr (PRECISION > 4) digit(10'000); // 5
+    if constexpr (PRECISION > 3) digit(1'000); // 4
+    if constexpr (PRECISION > 2) digit(100); // 3
+    digit(10); // 2
     *data = static_cast<char>('0' + number); // 1
 }
 
