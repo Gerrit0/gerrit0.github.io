@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head >
+    <meta charset="utf-8" />
+    <title>FLARE ON 2018 - Minesweeper Championship Registration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/main.css">
+    <script src="/theme.js" defer></script>
+    <script>document.documentElement.dataset.theme = localStorage.theme || 'os'</script>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    
+    <link id="syntax-dark" rel="stylesheet" type="text/css" href="/syntax-theme-dark.css" media="(prefers-color-scheme: dark)" />
+    <link id="syntax-light" rel="stylesheet" type="text/css" href="/syntax-theme-light.css" media="(prefers-color-scheme: light)" />
+    
+  </head>
+
+  <body>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog">Posts</a></li>
+      </ul>
+      <select>
+        <option value="os">OS</option>
+        <option value="dark">Dark</option>
+        <option value="light">Light</option>
+      </select>
+    </nav>
+
+    <section class="section">
+      <div class="container">
+<h1 class="title">FLARE ON 2018 - Minesweeper Championship Registration</h1>
+
+<p class="subtitle">2018-10-13</p>
+
+<p>This is the first year I heard about the FLARE-On CTF by FireEye, which this year ran from August 24 through October 5. There were a total of 12 levels, of which I was able to complete 3. I got roughly a third of the way through the fourth challenge before getting distracted with PicoCTF.</p>
+<p>Let's get started! The first challenge reads:</p>
+<blockquote>
+<p>Welcome to the Fifth Annual Flare-On Challenge! The Minesweeper World Championship is coming soon and we found the registration app. You weren't officially invited but if you can figure out what the code is you can probably get in anyway. Good luck!</p>
+</blockquote>
+<p>An encrypted <code>.7z</code> file is provided. Once downloaded and extracted, we are left with a <code>MinesweeperChampionshipRegistration.jar</code> file. I didn't even bother running it. Googling <code>java decompiler</code> brought me to http://www.javadecompilers.com, where I was able to upload the jar and receive a single file in return:</p>
+<pre data-lang="java" class="language-java z-code"><code class="language-java" data-lang="java"><span class="z-source z-java"><span class="z-meta z-import z-java"><span class="z-keyword z-control z-import z-java">import</span> <span class="z-meta z-path z-java"><span class="z-support z-type z-package z-java">javax</span></span><span class="z-meta z-path z-java"><span class="z-punctuation z-accessor z-dot z-java">.</span><span class="z-support z-type z-package z-java">swing</span><span class="z-punctuation z-accessor z-dot z-java">.</span><span class="z-support z-class z-import z-java">JOptionPane</span></span></span><span class="z-punctuation z-terminator z-java">;</span>
+</span><span class="z-source z-java">
+</span><span class="z-source z-java"><span class="z-meta z-class z-java"><span class="z-storage z-modifier z-java">public</span> <span class="z-meta z-class z-identifier z-java"><span class="z-storage z-type z-java">class</span> <span class="z-entity z-name z-class z-java">InviteValidator</span></span> <span class="z-meta z-class z-body z-java"><span class="z-meta z-block z-java"><span class="z-punctuation z-section z-block z-begin z-java">{</span>
+</span></span></span></span><span class="z-source z-java"><span class="z-meta z-class z-java"><span class="z-meta z-class z-body z-java"><span class="z-meta z-block z-java">  <span class="z-storage z-modifier z-java">public</span> <span class="z-meta z-method z-java"><span class="z-meta z-method z-identifier z-java"><span class="z-entity z-name z-function z-constructor z-java">InviteValidator</span></span><span class="z-meta z-method z-parameters z-java"><span class="z-meta z-parens z-java"><span class="z-punctuation z-section z-parens z-begin z-java">(</span><span class="z-punctuation z-section z-parens z-end z-java">)</span></span></span> <span class="z-meta z-method z-java"><span class="z-meta z-method z-body z-java"><span class="z-punctuation z-section z-block z-begin z-java">{</span></span></span></span><span class="z-meta z-method z-java"><span class="z-meta z-method z-body z-java"><span class="z-punctuation z-section z-block z-end z-java">}</span></span></span>
+</span></span></span></span><span class="z-source z-java"><span class="z-meta z-class z-java"><span class="z-meta z-class z-body z-java"><span class="z-meta z-block z-java">
+</span></span></span></span><span class="z-source z-java"><span class="z-meta z-class z-java"><span class="z-meta z-class z-body z-java"><span class="z-meta z-block z-java">  <span class="z-storage z-modifier z-java">public</span> <span class="z-storage z-modifier z-java">static</span> <span class="z-meta z-method z-java"><span class="z-storage z-type z-void z-java">void</span> <span class="z-meta z-method z-identifier z-java"><span class="z-entity z-name z-function z-java">main</span></span><span class="z-meta z-method z-parameters z-java"><span class="z-meta z-parens z-java"><span class="z-punctuation z-section z-parens z-begin z-java">(</span><span class="z-support z-class z-java">String</span><span class="z-storage z-modifier z-array z-java">[]</span> <span class="z-variable z-parameter z-java">args</span><span class="z-punctuation z-section z-parens z-end z-java">)</span></span></span> <span class="z-meta z-method z-java"><span class="z-meta z-method z-body z-java"><span class="z-punctuation z-section z-block z-begin z-java">{</span></span></span></span><span class="z-meta z-method z-java"><span class="z-meta z-method z-body z-java"> <span class="z-support z-class z-java">String</span> response <span class="z-meta z-assignment z-rhs z-java"><span class="z-keyword z-operator z-assignment z-java">=</span> <span class="z-support z-class z-java">JOptionPane</span><span class="z-punctuation z-accessor z-dot z-java">.</span><span class="z-meta z-function-call z-java"><span class="z-variable z-function z-java">showInputDialog</span><span class="z-punctuation z-section z-parens z-begin z-java">(</span><span class="z-constant z-language z-java">null</span><span class="z-punctuation z-separator z-comma z-java">,</span> <span class="z-string z-quoted z-double z-java"><span class="z-punctuation z-definition z-string z-begin z-java">&quot;</span>Enter your invitation code:<span class="z-punctuation z-definition z-string z-end z-java">&quot;</span></span><span class="z-punctuation z-separator z-comma z-java">,</span> <span class="z-string z-quoted z-double z-java"><span class="z-punctuation z-definition z-string z-begin z-java">&quot;</span>Minesweeper Championship 2018<span class="z-punctuation z-definition z-string z-end z-java">&quot;</span></span><span class="z-punctuation z-separator z-comma z-java">,</span> <span class="z-constant z-numeric z-integer z-decimal z-java">3</span><span class="z-punctuation z-section z-parens z-end z-java">)</span></span></span><span class="z-punctuation z-terminator z-java">;</span>
+</span></span></span></span></span></span><span class="z-source z-java"><span class="z-meta z-class z-java"><span class="z-meta z-class z-body z-java"><span class="z-meta z-block z-java"><span class="z-meta z-method z-java"><span class="z-meta z-method z-body z-java">    <span class="z-keyword z-control z-conditional z-if z-java">if</span> <span class="z-meta z-parens z-java"><span class="z-punctuation z-section z-parens z-begin z-java">(</span>response<span class="z-punctuation z-accessor z-dot z-java">.</span><span class="z-meta z-function-call z-java"><span class="z-variable z-function z-java">equals</span><span class="z-punctuation z-section z-parens z-begin z-java">(</span><span class="z-string z-quoted z-double z-java"><span class="z-punctuation z-definition z-string z-begin z-java">&quot;</span>GoldenTicket2018@flare-on.com<span class="z-punctuation z-definition z-string z-end z-java">&quot;</span></span><span class="z-punctuation z-section z-parens z-end z-java">)</span></span><span class="z-punctuation z-section z-parens z-end z-java">)</span></span>
+</span></span></span></span></span></span><span class="z-source z-java"><span class="z-meta z-class z-java"><span class="z-meta z-class z-body z-java"><span class="z-meta z-block z-java"><span class="z-meta z-method z-java"><span class="z-meta z-method z-body z-java">    <span class="z-meta z-block z-java"><span class="z-punctuation z-section z-block z-begin z-java">{</span>
+</span></span></span></span></span></span></span><span class="z-source z-java"><span class="z-meta z-class z-java"><span class="z-meta z-class z-body z-java"><span class="z-meta z-block z-java"><span class="z-meta z-method z-java"><span class="z-meta z-method z-body z-java"><span class="z-meta z-block z-java">      <span class="z-support z-class z-java">JOptionPane</span><span class="z-punctuation z-accessor z-dot z-java">.</span><span class="z-meta z-function-call z-java"><span class="z-variable z-function z-java">showMessageDialog</span><span class="z-punctuation z-section z-parens z-begin z-java">(</span><span class="z-constant z-language z-java">null</span><span class="z-punctuation z-separator z-comma z-java">,</span> <span class="z-string z-quoted z-double z-java"><span class="z-punctuation z-definition z-string z-begin z-java">&quot;</span>Welcome to the Minesweeper Championship 2018!<span class="z-constant z-character z-escape z-java">\n</span>Please enter the following code to the ctfd.flare-on.com website to compete:<span class="z-constant z-character z-escape z-java">\n</span><span class="z-constant z-character z-escape z-java">\n</span><span class="z-punctuation z-definition z-string z-end z-java">&quot;</span></span> <span class="z-keyword z-operator z-arithmetic z-java">+</span> response<span class="z-punctuation z-separator z-comma z-java">,</span> <span class="z-string z-quoted z-double z-java"><span class="z-punctuation z-definition z-string z-begin z-java">&quot;</span>Success!<span class="z-punctuation z-definition z-string z-end z-java">&quot;</span></span><span class="z-punctuation z-separator z-comma z-java">,</span> <span class="z-keyword z-operator z-arithmetic z-java">-</span><span class="z-constant z-numeric z-integer z-decimal z-java">1</span><span class="z-punctuation z-section z-parens z-end z-java">)</span></span><span class="z-punctuation z-terminator z-java">;</span>
+</span></span></span></span></span></span></span><span class="z-source z-java"><span class="z-meta z-class z-java"><span class="z-meta z-class z-body z-java"><span class="z-meta z-block z-java"><span class="z-meta z-method z-java"><span class="z-meta z-method z-body z-java"><span class="z-meta z-block z-java">    <span class="z-punctuation z-section z-block z-end z-java">}</span></span>
+</span></span></span></span></span></span><span class="z-source z-java"><span class="z-meta z-class z-java"><span class="z-meta z-class z-body z-java"><span class="z-meta z-block z-java"><span class="z-meta z-method z-java"><span class="z-meta z-method z-body z-java">    <span class="z-keyword z-control z-conditional z-else z-java">else</span>
+</span></span></span></span></span></span><span class="z-source z-java"><span class="z-meta z-class z-java"><span class="z-meta z-class z-body z-java"><span class="z-meta z-block z-java"><span class="z-meta z-method z-java"><span class="z-meta z-method z-body z-java">    <span class="z-meta z-block z-java"><span class="z-punctuation z-section z-block z-begin z-java">{</span>
+</span></span></span></span></span></span></span><span class="z-source z-java"><span class="z-meta z-class z-java"><span class="z-meta z-class z-body z-java"><span class="z-meta z-block z-java"><span class="z-meta z-method z-java"><span class="z-meta z-method z-body z-java"><span class="z-meta z-block z-java">      <span class="z-support z-class z-java">JOptionPane</span><span class="z-punctuation z-accessor z-dot z-java">.</span><span class="z-meta z-function-call z-java"><span class="z-variable z-function z-java">showMessageDialog</span><span class="z-punctuation z-section z-parens z-begin z-java">(</span><span class="z-constant z-language z-java">null</span><span class="z-punctuation z-separator z-comma z-java">,</span> <span class="z-string z-quoted z-double z-java"><span class="z-punctuation z-definition z-string z-begin z-java">&quot;</span>Incorrect invitation code. Please try again next year.<span class="z-punctuation z-definition z-string z-end z-java">&quot;</span></span><span class="z-punctuation z-separator z-comma z-java">,</span> <span class="z-string z-quoted z-double z-java"><span class="z-punctuation z-definition z-string z-begin z-java">&quot;</span>Failure<span class="z-punctuation z-definition z-string z-end z-java">&quot;</span></span><span class="z-punctuation z-separator z-comma z-java">,</span> <span class="z-constant z-numeric z-integer z-decimal z-java">0</span><span class="z-punctuation z-section z-parens z-end z-java">)</span></span><span class="z-punctuation z-terminator z-java">;</span>
+</span></span></span></span></span></span></span><span class="z-source z-java"><span class="z-meta z-class z-java"><span class="z-meta z-class z-body z-java"><span class="z-meta z-block z-java"><span class="z-meta z-method z-java"><span class="z-meta z-method z-body z-java"><span class="z-meta z-block z-java">    <span class="z-punctuation z-section z-block z-end z-java">}</span></span>
+</span></span></span></span></span></span><span class="z-source z-java"><span class="z-meta z-class z-java"><span class="z-meta z-class z-body z-java"><span class="z-meta z-block z-java"><span class="z-meta z-method z-java"><span class="z-meta z-method z-body z-java">  <span class="z-punctuation z-section z-block z-end z-java">}</span></span></span>
+</span></span></span></span><span class="z-source z-java"><span class="z-meta z-class z-java"><span class="z-meta z-class z-body z-java"><span class="z-meta z-block z-java"><span class="z-punctuation z-section z-block z-end z-java">}</span></span></span></span>
+</span></code></pre>
+<p>The first flag is obviously <code>GoldenTicket2018@flare-on.com</code>.</p>
+
+
+</div>
+    </section>
+
+    <footer>
+      <ul>
+        <li><a href="https://github.com/gerrit0">GitHub</a></li>
+      </ul>
+
+    </footer>
+  </body>
+</html>

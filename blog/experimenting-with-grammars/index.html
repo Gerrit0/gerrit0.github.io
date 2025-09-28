@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head >
+    <meta charset="utf-8" />
+    <title>Experimenting With Grammars</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/main.css">
+    <script src="/theme.js" defer></script>
+    <script>document.documentElement.dataset.theme = localStorage.theme || 'os'</script>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    
+    <link id="syntax-dark" rel="stylesheet" type="text/css" href="/syntax-theme-dark.css" media="(prefers-color-scheme: dark)" />
+    <link id="syntax-light" rel="stylesheet" type="text/css" href="/syntax-theme-light.css" media="(prefers-color-scheme: light)" />
+    
+  </head>
+
+  <body>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog">Posts</a></li>
+      </ul>
+      <select>
+        <option value="os">OS</option>
+        <option value="dark">Dark</option>
+        <option value="light">Light</option>
+      </select>
+    </nav>
+
+    <section class="section">
+      <div class="container">
+<h1 class="title">Experimenting With Grammars</h1>
+
+<p class="subtitle">2019-02-16</p>
+
+<p>I've been interested in language development for the past few months, and have experimented with building my own compiler using both <a href="http://www.stack.nl/~marcov/compiler.pdf">Jack W. Crenshaw's tutorial</a> and <a href="https://norasandler.com/2017/11/29/Write-a-Compiler.html">Nora Sandler's series</a>. Unfortunately, while I was able to generate working code, the amount of effort required to achieve a product that I was satisfied with was massive. I never finished either of the above guides.</p>
+<p>However, I recently realized that there was another simpler project that I could complete while learning more about parsers. While parsing certainly isn't the hardest part of compiler design, it can be difficult.</p>
+<p>Last semester I took Linear Algebra and was introduced to LaTeX. I now use it for almost everything... including my math course this semester. For each homework assignment I need to create a new document, paste in my template, and manually convert the problem list into <code>\problem{#}</code> headers. The input looks like this:</p>
+<pre class="z-code"><code><span class="z-text z-plain">Suggested: 1, 3bc, 4 - 8, 10 - 13
+</span><span class="z-text z-plain">Hand in: 1, 3bc, 4, 5, 7 b,d, 11, 13
+</span></code></pre>
+<p>Now, it's possible to get a pretty good guess at what the problems are just by extracting the numbers or by splitting by commas and getting all the numbers, but I also wanted to capture the problem parts. Doing this manually isn't that hard (ignoring ranges for a moment)</p>
+<pre data-lang="js" class="language-js z-code"><code class="language-js" data-lang="js"><span class="z-source z-ts"><span class="z-meta z-var z-expr z-ts"><span class="z-storage z-type z-ts">const</span> <span class="z-meta z-var-single-variable z-expr z-ts"><span class="z-meta z-definition z-variable z-ts"><span class="z-variable z-other z-constant z-ts">text</span></span> </span><span class="z-keyword z-operator z-assignment z-ts">=</span> <span class="z-string z-quoted z-double z-ts"><span class="z-punctuation z-definition z-string z-begin z-ts">&quot;</span>1, 3bc, 4, 5, 7 b,d, 11, 13<span class="z-punctuation z-definition z-string z-end z-ts">&quot;</span></span></span><span class="z-punctuation z-terminator z-statement z-ts">;</span>
+</span><span class="z-source z-ts">
+</span><span class="z-source z-ts"><span class="z-meta z-var z-expr z-ts"><span class="z-storage z-type z-ts">const</span> <span class="z-meta z-var-single-variable z-expr z-ts"><span class="z-meta z-definition z-variable z-ts"><span class="z-variable z-other z-constant z-ts">parts</span></span> </span><span class="z-keyword z-operator z-assignment z-ts">=</span> <span class="z-meta z-function-call z-ts"><span class="z-variable z-other z-object z-ts">text</span><span class="z-punctuation z-accessor z-ts">.</span><span class="z-support z-function z-ts">split</span></span><span class="z-meta z-brace z-round z-ts">(</span><span class="z-string z-quoted z-double z-ts"><span class="z-punctuation z-definition z-string z-begin z-ts">&quot;</span>,<span class="z-punctuation z-definition z-string z-end z-ts">&quot;</span></span><span class="z-meta z-brace z-round z-ts">)</span></span><span class="z-punctuation z-terminator z-statement z-ts">;</span>
+</span><span class="z-source z-ts"><span class="z-meta z-var z-expr z-ts"><span class="z-storage z-type z-ts">const</span> <span class="z-meta z-var-single-variable z-expr z-ts"><span class="z-meta z-definition z-variable z-ts"><span class="z-variable z-other z-constant z-ts">result</span></span> </span><span class="z-keyword z-operator z-assignment z-ts">=</span><span class="z-meta z-array z-literal z-ts"> <span class="z-meta z-brace z-square z-ts">[</span><span class="z-meta z-brace z-square z-ts">]</span></span></span><span class="z-punctuation z-terminator z-statement z-ts">;</span>
+</span><span class="z-source z-ts">
+</span><span class="z-source z-ts"><span class="z-keyword z-control z-loop z-ts">for</span> <span class="z-meta z-brace z-round z-ts">(</span><span class="z-meta z-var z-expr z-ts"><span class="z-storage z-type z-ts">const</span> <span class="z-meta z-var-single-variable z-expr z-ts"><span class="z-meta z-definition z-variable z-ts"><span class="z-variable z-other z-constant z-ts">part</span></span> </span></span><span class="z-keyword z-operator z-expression z-of z-ts">of</span> <span class="z-variable z-other z-readwrite z-ts">parts</span><span class="z-meta z-brace z-round z-ts">)</span> <span class="z-meta z-block z-ts"><span class="z-punctuation z-definition z-block z-ts">{</span>
+</span></span><span class="z-source z-ts"><span class="z-meta z-block z-ts">  <span class="z-keyword z-control z-conditional z-ts">if</span> <span class="z-meta z-brace z-round z-ts">(</span><span class="z-string z-regexp z-ts"><span class="z-punctuation z-definition z-string z-begin z-ts">/</span><span class="z-constant z-other z-character-class z-regexp">\d</span><span class="z-punctuation z-definition z-string z-end z-ts">/</span></span><span class="z-meta z-function-call z-ts"><span class="z-punctuation z-accessor z-ts">.</span><span class="z-support z-function z-ts">test</span></span><span class="z-meta z-brace z-round z-ts">(</span><span class="z-variable z-other z-readwrite z-ts">part</span><span class="z-meta z-brace z-round z-ts">)</span><span class="z-meta z-brace z-round z-ts">)</span> <span class="z-meta z-block z-ts"><span class="z-punctuation z-definition z-block z-ts">{</span>
+</span></span></span><span class="z-source z-ts"><span class="z-meta z-block z-ts"><span class="z-meta z-block z-ts">    <span class="z-meta z-function-call z-ts"><span class="z-variable z-other z-object z-ts">result</span><span class="z-punctuation z-accessor z-ts">.</span><span class="z-support z-function z-ts">push</span></span><span class="z-meta z-brace z-round z-ts">(</span><span class="z-meta z-objectliteral z-ts"><span class="z-punctuation z-definition z-block z-ts">{</span> <span class="z-meta z-object z-member z-ts"><span class="z-meta z-object-literal z-key z-ts">value</span></span><span class="z-meta z-object z-member z-ts"><span class="z-meta z-object-literal z-key z-ts"><span class="z-punctuation z-separator z-key-value z-ts">:</span></span> <span class="z-meta z-function-call z-ts"><span class="z-support z-function z-ts">parseInt</span></span><span class="z-meta z-brace z-round z-ts">(</span><span class="z-variable z-other z-readwrite z-ts">part</span><span class="z-meta z-brace z-round z-ts">)</span></span><span class="z-punctuation z-separator z-comma z-ts">,</span> <span class="z-meta z-object z-member z-ts"><span class="z-meta z-object-literal z-key z-ts">parts</span></span><span class="z-meta z-object z-member z-ts"><span class="z-meta z-object-literal z-key z-ts"><span class="z-punctuation z-separator z-key-value z-ts">:</span></span><span class="z-meta z-array z-literal z-ts"> <span class="z-meta z-brace z-square z-ts">[</span><span class="z-meta z-brace z-square z-ts">]</span></span> </span><span class="z-punctuation z-definition z-block z-ts">}</span></span><span class="z-meta z-brace z-round z-ts">)</span><span class="z-punctuation z-terminator z-statement z-ts">;</span>
+</span></span></span><span class="z-source z-ts"><span class="z-meta z-block z-ts"><span class="z-meta z-block z-ts">  <span class="z-punctuation z-definition z-block z-ts">}</span></span>
+</span></span><span class="z-source z-ts"><span class="z-meta z-block z-ts">  <span class="z-keyword z-control z-conditional z-ts">if</span> <span class="z-meta z-brace z-round z-ts">(</span><span class="z-string z-regexp z-ts"><span class="z-punctuation z-definition z-string z-begin z-ts">/</span><span class="z-constant z-other z-character-class z-set z-regexp"><span class="z-punctuation z-definition z-character-class z-regexp">[</span><span class="z-constant z-other z-character-class z-range z-regexp">a-z</span><span class="z-punctuation z-definition z-character-class z-regexp">]</span></span><span class="z-punctuation z-definition z-string z-end z-ts">/</span></span><span class="z-meta z-function-call z-ts"><span class="z-punctuation z-accessor z-ts">.</span><span class="z-support z-function z-ts">test</span></span><span class="z-meta z-brace z-round z-ts">(</span><span class="z-variable z-other z-readwrite z-ts">part</span><span class="z-meta z-brace z-round z-ts">)</span><span class="z-meta z-brace z-round z-ts">)</span> <span class="z-meta z-block z-ts"><span class="z-punctuation z-definition z-block z-ts">{</span>
+</span></span></span><span class="z-source z-ts"><span class="z-meta z-block z-ts"><span class="z-meta z-block z-ts">    <span class="z-variable z-other z-readwrite z-ts">result</span><span class="z-meta z-array z-literal z-ts"><span class="z-meta z-brace z-square z-ts">[</span><span class="z-variable z-other z-object z-ts">result</span><span class="z-punctuation z-accessor z-ts">.</span><span class="z-support z-variable z-property z-ts">length</span> <span class="z-keyword z-operator z-arithmetic z-ts">-</span> <span class="z-constant z-numeric z-decimal z-ts">1</span><span class="z-meta z-brace z-square z-ts">]</span></span><span class="z-punctuation z-accessor z-ts">.</span><span class="z-variable z-other z-object z-property z-ts">parts</span><span class="z-meta z-function-call z-ts"><span class="z-punctuation z-accessor z-ts">.</span><span class="z-support z-function z-ts">push</span></span><span class="z-meta z-brace z-round z-ts">(</span><span class="z-keyword z-operator z-spread z-ts">...</span><span class="z-meta z-function-call z-ts"><span class="z-variable z-other z-object z-ts">part</span><span class="z-punctuation z-accessor z-ts">.</span><span class="z-support z-function z-ts">match</span></span><span class="z-meta z-brace z-round z-ts">(</span><span class="z-string z-regexp z-ts"><span class="z-punctuation z-definition z-string z-begin z-ts">/</span><span class="z-constant z-other z-character-class z-set z-regexp"><span class="z-punctuation z-definition z-character-class z-regexp">[</span><span class="z-constant z-other z-character-class z-range z-regexp">a-z</span><span class="z-punctuation z-definition z-character-class z-regexp">]</span></span><span class="z-punctuation z-definition z-string z-end z-ts">/</span><span class="z-keyword z-other z-ts">g</span></span><span class="z-meta z-brace z-round z-ts">)</span><span class="z-meta z-brace z-round z-ts">)</span><span class="z-punctuation z-terminator z-statement z-ts">;</span>
+</span></span></span><span class="z-source z-ts"><span class="z-meta z-block z-ts"><span class="z-meta z-block z-ts">  <span class="z-punctuation z-definition z-block z-ts">}</span></span>
+</span></span><span class="z-source z-ts"><span class="z-meta z-block z-ts"><span class="z-punctuation z-definition z-block z-ts">}</span></span>
+</span><span class="z-source z-ts">
+</span><span class="z-source z-ts"><span class="z-meta z-function-call z-ts"><span class="z-support z-class z-console z-ts">console</span><span class="z-punctuation z-accessor z-ts">.</span><span class="z-support z-function z-console z-ts">log</span></span><span class="z-meta z-brace z-round z-ts">(</span><span class="z-variable z-other z-readwrite z-ts">result</span><span class="z-meta z-brace z-round z-ts">)</span><span class="z-punctuation z-terminator z-statement z-ts">;</span>
+</span></code></pre>
+<p>... but what's the fun in that? Also, while the above code works, it will accept arbitrary input and, if the input isn't precisely formatted, may produce unexpected results. I wanted something better.</p>
+<p>There are several JavaScript parser generators available, but I decided to use <a href="https://nearley.js.org/">nearley.js</a> since I've played with it before.</p>
+<p>I've found that the best way to experiment with a parser is to toss it into the <a href="https://omrelli.ug/nearley-playground/">parser playground</a> and create a few tests. The first step is to accept single numbers and comma separated numbers.</p>
+<pre class="z-code"><code><span class="z-text z-plain">main -&gt; problems {\% d =&gt; JSON.stringify(d[0]) \%}
+</span><span class="z-text z-plain">
+</span><span class="z-text z-plain">problems -&gt;
+</span><span class="z-text z-plain">  problem # No id since we want the problem to be in an array
+</span><span class="z-text z-plain">  | problems &quot;,&quot; problem {\% d =&gt; d[0].concat(d[2]) \%}
+</span><span class="z-text z-plain">
+</span><span class="z-text z-plain">problem -&gt; number {\% id \%}
+</span><span class="z-text z-plain">
+</span><span class="z-text z-plain">number -&gt; [0-9]:+ {\% d =&gt; +d[0].join(&#39;&#39;) \%}
+</span></code></pre>
+<p>This parser is rather restrictive, it won't let you include spaces anywhere, so let's fix that. Convention is to use <code>_</code> for whitespace. According to the <a href="https://nearley.js.org/docs/how-to-grammar-good#postprocess-or-dispose">How to grammar good</a> guide, this rule should return null to throw away the parsed value.</p>
+<pre class="z-code"><code><span class="z-text z-plain">main -&gt; _ problems _ {\% d =&gt; JSON.stringify(d[1]) \%}
+</span><span class="z-text z-plain">
+</span><span class="z-text z-plain">problems -&gt;
+</span><span class="z-text z-plain">  problem # No id since we want the problem to be in an array
+</span><span class="z-text z-plain">  | problems _ &quot;,&quot; _ problem {\% d =&gt; d[0].concat(d[4]) \%}
+</span><span class="z-text z-plain">
+</span><span class="z-text z-plain">problem -&gt; number {\% id \%}
+</span><span class="z-text z-plain">
+</span><span class="z-text z-plain">number -&gt; [0-9]:+ {\% d =&gt; +d[0].join(&#39;&#39;) \%}
+</span><span class="z-text z-plain">
+</span><span class="z-text z-plain">_ -&gt; [\s]:* {\% () =&gt; null \%}
+</span></code></pre>
+<p>Next up, let's extend the parser to also accept problem parts, so <code>1a, b</code> is now a valid problem. This isn't too difficult, if you do it the right way.</p>
+<pre class="z-code"><code><span class="z-text z-plain">main -&gt; _ problems _ {\% d =&gt; JSON.stringify(d[1]) \%}
+</span><span class="z-text z-plain">
+</span><span class="z-text z-plain">problems -&gt;
+</span><span class="z-text z-plain">    problem # No id since we want the problem to be in an array
+</span><span class="z-text z-plain">  | problems _ &quot;,&quot; _ problem {\% d =&gt; d[0].concat(d[4]) \%}
+</span><span class="z-text z-plain">
+</span><span class="z-text z-plain">problem -&gt; number _ parts:? {\% ([value, _, parts]) =&gt; ({ value, parts: parts || [] }) \%}
+</span><span class="z-text z-plain">
+</span><span class="z-text z-plain">parts -&gt;
+</span><span class="z-text z-plain">    part {\% d =&gt; d[1] \%}
+</span><span class="z-text z-plain">  | parts _ &quot;,&quot; _ part {\% d =&gt; d[0].concat(d[4]) \%}
+</span><span class="z-text z-plain">
+</span><span class="z-text z-plain">part -&gt; [a-z]:+ {\% id \%}
+</span><span class="z-text z-plain">
+</span><span class="z-text z-plain">number -&gt; [0-9]:+ {\% d =&gt; +d[0].join(&#39;&#39;) \%}
+</span><span class="z-text z-plain">
+</span><span class="z-text z-plain">_ -&gt; [\s]:* {\% () =&gt; null \%}
+</span></code></pre>
+<p>In my first implementation of this parser, I forgot that I could use the <code>:?</code> EBNF modifier on <code>parts</code> in the <code>problem</code> rule to indicate that it was optional, and tried to make <code>parts</code> optional within the rule with <code>_ [a-z]:* _</code>. This is a problem since it introduces ambiguity. (How should the parser handle <code>1 a </code>?)</p>
+<p>Now all that's left is to handle problem ranges, this is also simple since ranges can't have <code>parts</code>.</p>
+<pre class="z-code"><code><span class="z-text z-plain">main -&gt; _ problems {\% d =&gt; JSON.stringify(d[1]) \%}
+</span><span class="z-text z-plain">
+</span><span class="z-text z-plain">problems -&gt;
+</span><span class="z-text z-plain">    problem # No id since we want the problem to be in an array
+</span><span class="z-text z-plain">  | problem_range # ditto
+</span><span class="z-text z-plain">  | problems _ &quot;,&quot; _ (problem|problem_range) {\% d =&gt; d[0].concat(d[4]) \%}
+</span><span class="z-text z-plain">
+</span><span class="z-text z-plain">problem -&gt; number _ parts:? {\% ([value, _, parts]) =&gt; ({ value, parts: parts || [] }) \%}
+</span><span class="z-text z-plain">
+</span><span class="z-text z-plain">problem_range -&gt; number _ &quot;-&quot; _ number {\% d =&gt; ({ range: [d[0], d[4]] }) \%}
+</span><span class="z-text z-plain">
+</span><span class="z-text z-plain">parts -&gt;
+</span><span class="z-text z-plain">    part {\% id \%}
+</span><span class="z-text z-plain">  | parts _ &quot;,&quot; _ part {\% d =&gt; d[0].concat(d[4]) \%}
+</span><span class="z-text z-plain">
+</span><span class="z-text z-plain">part -&gt; [a-z]:+ {\% id \%}
+</span><span class="z-text z-plain">
+</span><span class="z-text z-plain">number -&gt; [0-9]:+ {\% d =&gt; +d[0].join(&#39;&#39;) \%}
+</span><span class="z-text z-plain">
+</span><span class="z-text z-plain">_ -&gt; [\s]:* {\% () =&gt; null \%}
+</span></code></pre>
+<p>With this change, the parser can now handle both of the problem lists presented at the start of this post, and will throw an error that can quickly show where the problem is if something isn't quite right. I decided to not handle the "Suggested" or "Hand in" prefixes in the parser since I suspect that I will use this code for other classes that don't have these labels in the future.</p>
+<p>I wrapped the parser up with a bit more ad-hoc parsing to handle suggested/required problems, and included it with a few other tools. You can see the result at <a href="https://gerritbirkeland.com/tools/">https://gerritbirkeland.com/tools/</a>, and the rest of the code at <a href="https://github.com/Gerrit0/tools">https://github.com/Gerrit0/tools</a></p>
+
+
+</div>
+    </section>
+
+    <footer>
+      <ul>
+        <li><a href="https://github.com/gerrit0">GitHub</a></li>
+      </ul>
+
+    </footer>
+  </body>
+</html>

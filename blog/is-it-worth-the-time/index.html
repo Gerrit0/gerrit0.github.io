@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head >
+    <meta charset="utf-8" />
+    <title>Is it worth the time?</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/main.css">
+    <script src="/theme.js" defer></script>
+    <script>document.documentElement.dataset.theme = localStorage.theme || 'os'</script>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    
+    <link id="syntax-dark" rel="stylesheet" type="text/css" href="/syntax-theme-dark.css" media="(prefers-color-scheme: dark)" />
+    <link id="syntax-light" rel="stylesheet" type="text/css" href="/syntax-theme-light.css" media="(prefers-color-scheme: light)" />
+    
+  </head>
+
+  <body>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog">Posts</a></li>
+      </ul>
+      <select>
+        <option value="os">OS</option>
+        <option value="dark">Dark</option>
+        <option value="light">Light</option>
+      </select>
+    </nav>
+
+    <section class="section">
+      <div class="container">
+<h1 class="title">Is it worth the time?</h1>
+
+<p class="subtitle">2019-07-13</p>
+
+<p>xkcd has <a href="https://xkcd.com/1205/">a post</a> which details how much time you can spend automating a task before the time spent automating the task will be more than the time saved.</p>
+<p><img src="https://imgs.xkcd.com/comics/is_it_worth_the_time.png" alt="Is It Worth The Time?" /></p>
+<p>While an interesting idea, I find it more helpful to consider how much it will take before time spent automating will pay off.</p>
+<style>
+#shavedTime, #automateTime, #periodTime,
+#shavedUnit, #automateUnit, #periodUnit {
+  padding: 0.3em;
+  border-radius: 7px;
+  border: 1px solid var(--accent-color);
+}
+#shavedTime, #automateTime, #periodTime {
+  margin-left: 2em;
+  margin-bottom: 1em;
+  margin-top: 0.5em;
+}
+
+label {
+  font-weight: bold;
+}
+
+#result {
+  border: 1px solid var(--accent-color);
+  background: var(--secondary-background);
+  margin: 0.5em;
+  padding: 0.5em;
+}
+</style>
+<label>
+  How much will the automation save?<br>
+  <input id="shavedTime" type="number" value="5" min="1">
+</label>
+<select id="shavedUnit">
+  <option value="second">seconds</option>
+  <option value="minute" selected>minutes</option>
+  <option value="hour">hours</option>
+  <option value="day">days</option>
+  <option value="week">weeks</option>
+</select>
+<br>
+<label>
+  How long will it take to automate?<br>
+  <input id="automateTime" type="number" value="2" min="1">
+</label>
+<select id="automateUnit">
+  <option value="second">seconds</option>
+  <option value="minute">minutes</option>
+  <option value="hour" selected>hours</option>
+  <option value="day">days</option>
+  <option value="week">weeks</option>
+</select>
+<br>
+<label>
+  How often do you do the task?<br>
+  <input id="periodTime" type="number" value="1" min="1">
+  time(s) per
+</label>
+<select id="periodUnit">
+  <option value="minute">minute</option>
+  <option value="hour" selected>hour</option>
+  <option value="day">day</option>
+  <option value="week">week</option>
+  <option value="month">month</option>
+</select>
+<div id="result"></div>
+<script src="/worth-the-time.js"></script>
+
+
+</div>
+    </section>
+
+    <footer>
+      <ul>
+        <li><a href="https://github.com/gerrit0">GitHub</a></li>
+      </ul>
+
+    </footer>
+  </body>
+</html>

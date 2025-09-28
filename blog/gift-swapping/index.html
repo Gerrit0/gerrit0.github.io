@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head >
+    <meta charset="utf-8" />
+    <title>Gift Swapping</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/main.css">
+    <script src="/theme.js" defer></script>
+    <script>document.documentElement.dataset.theme = localStorage.theme || 'os'</script>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    
+    <link id="syntax-dark" rel="stylesheet" type="text/css" href="/syntax-theme-dark.css" media="(prefers-color-scheme: dark)" />
+    <link id="syntax-light" rel="stylesheet" type="text/css" href="/syntax-theme-light.css" media="(prefers-color-scheme: light)" />
+    
+  </head>
+
+  <body>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog">Posts</a></li>
+      </ul>
+      <select>
+        <option value="os">OS</option>
+        <option value="dark">Dark</option>
+        <option value="light">Light</option>
+      </select>
+    </nav>
+
+    <section class="section">
+      <div class="container">
+<h1 class="title">Gift Swapping</h1>
+
+<p class="subtitle">2023-11-12</p>
+
+<p>If you just want the tool: <a href="https://gerritbirkeland.com/blog/gift-swapping/#tool">Click here</a></p>
+<p>Updated 2024-06-22, see <a href="https://gerritbirkeland.com/blog/gift-swapping/#update-2024-06-22">Updates</a></p>
+<h2 id="introduction">Introduction<a class="zola-anchor" href="#introduction" aria-label="Anchor link for: introduction">🔗</a></h2>
+<p>When exchanging gifts at Christmas, my extended family doesn't have everyone give to everyone,
+instead, each person receives the name of another in the family and gives to that person. This
+assignment changes each year with the following goals, in decreasing order of importance:</p>
+<ol>
+<li>Everybody should give to exactly one person.</li>
+<li>Nobody should give to themselves.</li>
+<li>Couples should not give to one another.</li>
+<li>Each person should eventually give to every other person.</li>
+<li>Couple-pairs should not give to one another. (Prioritize cross-branch giving)</li>
+</ol>
+<p>My solution for this problem ignores #5, since the solution that it happened to generate
+looked reasonable for my input without handling it explicitly.</p>
+<h2 id="solution">Solution<a class="zola-anchor" href="#solution" aria-label="Anchor link for: solution">🔗</a></h2>
+<p>To visualize this problem, I imagine a graph where the nodes of the graph are people
+and the edges of the graph are the people that that person <em>could</em> give a gift to.</p>
+ <svg width="243pt" height="235pt" viewBox="0.00 0.00 243.39 234.72" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g class="graph" transform="scale(1 1) rotate(0) translate(4 230.7203)">
+<title>G</title>
+<!-- A -->
+<g class="node">
+<title>A</title>
+<ellipse fill="none" stroke="var(--text-color)" cx="27" cy="-172.296" rx="27" ry="18"/>
+<text text-anchor="middle" x="27" y="-168.096" font-family="Times,serif" font-size="14.00" fill="var(--text-color)">A</text>
+</g>
+<!-- B -->
+<g class="node">
+<title>B</title>
+<ellipse fill="none" stroke="var(--text-color)" cx="27" cy="-54.4243" rx="27" ry="18"/>
+<text text-anchor="middle" x="27" y="-50.2243" font-family="Times,serif" font-size="14.00" fill="var(--text-color)">B</text>
+</g>
+<!-- A&#45;&gt;B -->
+<g class="edge">
+<title>A-&gt;B</title>
+<path fill="none" stroke="var(--text-color)" d="M27,-154.1369C27,-132.0512 27,-94.9806 27,-72.7983"/>
+</g>
+<!-- C -->
+<g class="node">
+<title>C</title>
+<ellipse fill="none" stroke="var(--text-color)" cx="208.3858" cy="-113.3602" rx="27" ry="18"/>
+<text text-anchor="middle" x="208.3858" y="-109.1602" font-family="Times,serif" font-size="14.00" fill="var(--text-color)">C</text>
+</g>
+<!-- A&#45;&gt;C -->
+<g class="edge">
+<title>A-&gt;C</title>
+<path fill="none" stroke="var(--text-color)" d="M51.4625,-164.3476C86.1779,-153.0679 149.3605,-132.5387 184.0219,-121.2765"/>
+</g>
+<!-- D -->
+<g class="node">
+<title>D</title>
+<ellipse fill="none" stroke="var(--text-color)" cx="139.1026" cy="-208.7203" rx="27" ry="18"/>
+<text text-anchor="middle" x="139.1026" y="-204.5203" font-family="Times,serif" font-size="14.00" fill="var(--text-color)">D</text>
+</g>
+<!-- A&#45;&gt;D -->
+<g class="edge">
+<title>A-&gt;D</title>
+<path fill="none" stroke="var(--text-color)" d="M51.3246,-180.1995C70.128,-186.3091 96.0341,-194.7265 114.8255,-200.8322"/>
+</g>
+<!-- E -->
+<g class="node">
+<title>E</title>
+<ellipse fill="none" stroke="var(--text-color)" cx="139.1026" cy="-18" rx="27" ry="18"/>
+<text text-anchor="middle" x="139.1026" y="-13.8" font-family="Times,serif" font-size="14.00" fill="var(--text-color)">E</text>
+</g>
+<!-- A&#45;&gt;E -->
+<g class="edge">
+<title>A-&gt;E</title>
+<path fill="none" stroke="var(--text-color)" d="M38.7851,-156.0752C60.2591,-126.5188 105.5322,-64.2057 127.138,-34.4678"/>
+</g>
+<!-- B&#45;&gt;D -->
+<g class="edge">
+<title>B-&gt;D</title>
+<path fill="none" stroke="var(--text-color)" d="M38.7851,-70.6451C60.2591,-100.2015 105.5322,-162.5146 127.138,-192.2525"/>
+</g>
+<!-- B&#45;&gt;E -->
+<g class="edge">
+<title>B-&gt;E</title>
+<path fill="none" stroke="var(--text-color)" d="M51.3246,-46.5208C70.128,-40.4112 96.0341,-31.9938 114.8255,-25.8881"/>
+</g>
+<!-- C&#45;&gt;D -->
+<g class="edge">
+<title>C-&gt;D</title>
+<path fill="none" stroke="var(--text-color)" d="M196.3176,-129.9706C183.6011,-147.4734 163.6966,-174.8696 151.0325,-192.3002"/>
+</g>
+<!-- C&#45;&gt;E -->
+<g class="edge">
+<title>C-&gt;E</title>
+<path fill="none" stroke="var(--text-color)" d="M196.3176,-96.7497C183.6011,-79.247 163.6966,-51.8507 151.0325,-34.4201"/>
+</g>
+</g>
+</svg>
+
+<p>Let's walk through choosing a set of edges for one year. When we say
+"A gives to B", that means we highlight the edge A-B, and ignore the other edges connected to either
+A or B.</p>
+ <svg width="243pt" height="235pt" viewBox="0.00 0.00 243.39 234.72" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g class="graph" transform="scale(1 1) rotate(0) translate(4 230.7203)">
+<title>G</title>
+<!-- A -->
+<g class="node">
+<title>A</title>
+<ellipse fill="none" stroke="var(--text-color)" cx="27" cy="-172.296" rx="27" ry="18"/>
+<text text-anchor="middle" x="27" y="-168.096" font-family="Times,serif" font-size="14.00" fill="var(--text-color)">A</text>
+</g>
+<!-- B -->
+<g class="node">
+<title>B</title>
+<ellipse fill="none" stroke="var(--text-color)" cx="27" cy="-54.4243" rx="27" ry="18"/>
+<text text-anchor="middle" x="27" y="-50.2243" font-family="Times,serif" font-size="14.00" fill="var(--text-color)">B</text>
+</g>
+<!-- A&#45;&gt;B -->
+<g class="edge">
+<title>A-&gt;B</title>
+<path fill="none" stroke="var(--text-emphasis)" d="M27,-154.1369C27,-132.0512 27,-94.9806 27,-72.7983"/>
+</g>
+<!-- C -->
+<g class="node">
+<title>C</title>
+<ellipse fill="none" stroke="var(--text-color)" cx="208.3858" cy="-113.3602" rx="27" ry="18"/>
+<text text-anchor="middle" x="208.3858" y="-109.1602" font-family="Times,serif" font-size="14.00" fill="var(--text-color)">C</text>
+</g>
+<!-- A&#45;&gt;C -->
+<g class="edge">
+<title>A-&gt;C</title>
+<path fill="none" stroke="var(--text-dim)" d="M51.4625,-164.3476C86.1779,-153.0679 149.3605,-132.5387 184.0219,-121.2765"/>
+</g>
+<!-- D -->
+<g class="node">
+<title>D</title>
+<ellipse fill="none" stroke="var(--text-color)" cx="139.1026" cy="-208.7203" rx="27" ry="18"/>
+<text text-anchor="middle" x="139.1026" y="-204.5203" font-family="Times,serif" font-size="14.00" fill="var(--text-color)">D</text>
+</g>
+<!-- A&#45;&gt;D -->
+<g class="edge">
+<title>A-&gt;D</title>
+<path fill="none" stroke="var(--text-dim)" d="M51.3246,-180.1995C70.128,-186.3091 96.0341,-194.7265 114.8255,-200.8322"/>
+</g>
+<!-- E -->
+<g class="node">
+<title>E</title>
+<ellipse fill="none" stroke="var(--text-color)" cx="139.1026" cy="-18" rx="27" ry="18"/>
+<text text-anchor="middle" x="139.1026" y="-13.8" font-family="Times,serif" font-size="14.00" fill="var(--text-color)">E</text>
+</g>
+<!-- A&#45;&gt;E -->
+<g class="edge">
+<title>A-&gt;E</title>
+<path fill="none" stroke="var(--text-dim)" d="M38.7851,-156.0752C60.2591,-126.5188 105.5322,-64.2057 127.138,-34.4678"/>
+</g>
+<!-- B&#45;&gt;D -->
+<g class="edge">
+<title>B-&gt;D</title>
+<path fill="none" stroke="var(--text-dim)" d="M38.7851,-70.6451C60.2591,-100.2015 105.5322,-162.5146 127.138,-192.2525"/>
+</g>
+<!-- B&#45;&gt;E -->
+<g class="edge">
+<title>B-&gt;E</title>
+<path fill="none" stroke="var(--text-dim)" d="M51.3246,-46.5208C70.128,-40.4112 96.0341,-31.9938 114.8255,-25.8881"/>
+</g>
+<!-- C&#45;&gt;D -->
+<g class="edge">
+<title>C-&gt;D</title>
+<path fill="none" stroke="var(--text-color)" d="M196.3176,-129.9706C183.6011,-147.4734 163.6966,-174.8696 151.0325,-192.3002"/>
+</g>
+<!-- C&#45;&gt;E -->
+<g class="edge">
+<title>C-&gt;E</title>
+<path fill="none" stroke="var(--text-color)" d="M196.3176,-96.7497C183.6011,-79.247 163.6966,-51.8507 151.0325,-34.4201"/>
+</g>
+</g>
+</svg>
+
+<p>Well, this has immediately revealed a problem. If A gives to B, then either D or E will not give
+to anyone, or we need to break rule #3. In fact, with an undirected graph like this, we'll always
+run into problems with an odd number of people since we need to have three people trading gifts.</p>
+<p>Let's re-think this. What if we had a directed graph instead of an undirected graph? In this case,
+A giving to B does not imply that B gives to A, so we still have lots of options.</p>
+ <svg width="243pt" height="235pt" viewBox="0.00 0.00 243.39 234.72" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g class="graph" transform="scale(1 1) rotate(0) translate(4 230.7203)">
+<title>G</title>
+<!-- A -->
+<g class="node">
+<title>A</title>
+<ellipse fill="none" stroke="var(--text-color)" cx="27" cy="-172.296" rx="27" ry="18"/>
+<text text-anchor="middle" x="27" y="-168.096" font-family="Times,serif" font-size="14.00" fill="var(--text-color)">A</text>
+</g>
+<!-- B -->
+<g class="node">
+<title>B</title>
+<ellipse fill="none" stroke="var(--text-color)" cx="27" cy="-54.4243" rx="27" ry="18"/>
+<text text-anchor="middle" x="27" y="-50.2243" font-family="Times,serif" font-size="14.00" fill="var(--text-color)">B</text>
+</g>
+<!-- A&#45;&gt;B -->
+<g class="edge">
+<title>A-&gt;B</title>
+<path fill="none" stroke="var(--text-emphasis)" d="M32.0094,-154.3938C33.9988,-135.3548 34.2829,-104.9737 32.8616,-82.6955"/>
+<polygon fill="var(--text-emphasis)" stroke="var(--text-emphasis)" points="36.3309,-82.1762 32.0269,-72.495 29.3542,-82.7472 36.3309,-82.1762"/>
+</g>
+<!-- C -->
+<g class="node">
+<title>C</title>
+<ellipse fill="none" stroke="var(--text-color)" cx="208.3858" cy="-113.3602" rx="27" ry="18"/>
+<text text-anchor="middle" x="208.3858" y="-109.1602" font-family="Times,serif" font-size="14.00" fill="var(--text-color)">C</text>
+</g>
+<!-- A&#45;&gt;C -->
+<g class="edge">
+<title>A-&gt;C</title>
+<path fill="none" stroke="var(--text-dim)" d="M53.7181,-168.7091C86.8809,-160.4381 143.264,-142.2742 178.0279,-128.7867"/>
+<polygon fill="var(--text-dim)" stroke="var(--text-dim)" points="179.66,-131.9037 187.6476,-124.9433 177.0628,-125.4033 179.66,-131.9037"/>
+</g>
+<!-- D -->
+<g class="node">
+<title>D</title>
+<ellipse fill="none" stroke="var(--text-color)" cx="139.1026" cy="-208.7203" rx="27" ry="18"/>
+<text text-anchor="middle" x="139.1026" y="-204.5203" font-family="Times,serif" font-size="14.00" fill="var(--text-color)">D</text>
+</g>
+<!-- A&#45;&gt;D -->
+<g class="edge">
+<title>A-&gt;D</title>
+<path fill="none" stroke="var(--text-dim)" d="M46.9279,-184.5098C62.287,-190.9421 83.9309,-198.2687 102.3916,-203.4136"/>
+<polygon fill="var(--text-dim)" stroke="var(--text-dim)" points="101.697,-206.8503 112.2599,-206.0278 103.4896,-200.0837 101.697,-206.8503"/>
+</g>
+<!-- E -->
+<g class="node">
+<title>E</title>
+<ellipse fill="none" stroke="var(--text-color)" cx="139.1026" cy="-18" rx="27" ry="18"/>
+<text text-anchor="middle" x="139.1026" y="-13.8" font-family="Times,serif" font-size="14.00" fill="var(--text-color)">E</text>
+</g>
+<!-- A&#45;&gt;E -->
+<g class="edge">
+<title>A-&gt;E</title>
+<path fill="none" stroke="var(--text-dim)" d="M43.0113,-157.7995C65.5724,-131.6748 105.7544,-76.6773 126.4016,-43.9475"/>
+<polygon fill="var(--text-dim)" stroke="var(--text-dim)" points="129.4307,-45.7031 131.6763,-35.349 123.4639,-42.0428 129.4307,-45.7031"/>
+</g>
+<!-- B&#45;&gt;A -->
+<g class="edge">
+<title>B-&gt;A</title>
+<path fill="none" stroke="var(--text-color)" d="M21.9906,-72.3265C20.0012,-91.3656 19.7171,-121.7467 21.1384,-144.0249"/>
+<polygon fill="var(--text-color)" stroke="var(--text-color)" points="17.6691,-144.5442 21.9731,-154.2254 24.6458,-143.9732 17.6691,-144.5442"/>
+</g>
+<!-- B&#45;&gt;D -->
+<g class="edge">
+<title>B-&gt;D</title>
+<path fill="none" stroke="var(--text-color)" d="M34.546,-71.9751C51.3102,-100.2097 91.0378,-155.4262 116.5145,-186.4035"/>
+<polygon fill="var(--text-color)" stroke="var(--text-color)" points="113.8626,-188.6881 122.9765,-194.0908 119.221,-184.1838 113.8626,-188.6881"/>
+</g>
+<!-- B&#45;&gt;E -->
+<g class="edge">
+<title>B-&gt;E</title>
+<path fill="none" stroke="var(--text-color)" d="M53.9319,-51.7096C70.7068,-47.5185 92.2866,-40.6455 109.5333,-34.0596"/>
+<polygon fill="var(--text-color)" stroke="var(--text-color)" points="111.1258,-37.1926 119.1181,-30.2375 108.533,-30.6905 111.1258,-37.1926"/>
+</g>
+<!-- C&#45;&gt;A -->
+<g class="edge">
+<title>C-&gt;A</title>
+<path fill="none" stroke="var(--text-color)" d="M181.6677,-116.9471C148.505,-125.2181 92.1218,-143.382 57.3579,-156.8694"/>
+<polygon fill="var(--text-color)" stroke="var(--text-color)" points="55.7259,-153.7524 47.7382,-160.7129 58.323,-160.2528 55.7259,-153.7524"/>
+</g>
+<!-- C&#45;&gt;D -->
+<g class="edge">
+<title>C-&gt;D</title>
+<path fill="none" stroke="var(--text-color)" d="M191.3386,-127.6978C178.7469,-142.1949 162.1325,-164.7833 150.9374,-182.467"/>
+<polygon fill="var(--text-color)" stroke="var(--text-color)" points="147.8329,-180.8359 145.6271,-191.1986 153.8137,-184.4733 147.8329,-180.8359"/>
+</g>
+<!-- C&#45;&gt;E -->
+<g class="edge">
+<title>C-&gt;E</title>
+<path fill="none" stroke="var(--text-color)" d="M201.656,-95.4845C192.4877,-79.7236 176.259,-56.8236 162.5469,-39.9661"/>
+<polygon fill="var(--text-color)" stroke="var(--text-color)" points="165.1683,-37.6451 156.0596,-32.2338 159.8056,-42.1443 165.1683,-37.6451"/>
+</g>
+<!-- D&#45;&gt;A -->
+<g class="edge">
+<title>D-&gt;A</title>
+<path fill="none" stroke="var(--text-color)" d="M119.1747,-196.5065C103.8156,-190.0743 82.1717,-182.7476 63.711,-177.6027"/>
+<polygon fill="var(--text-color)" stroke="var(--text-color)" points="64.4056,-174.1661 53.8427,-174.9885 62.613,-180.9327 64.4056,-174.1661"/>
+</g>
+<!-- D&#45;&gt;B -->
+<g class="edge">
+<title>D-&gt;B</title>
+<path fill="none" stroke="var(--text-color)" d="M131.5566,-191.1696C114.7924,-162.935 75.0648,-107.7185 49.5881,-76.7412"/>
+<polygon fill="var(--text-color)" stroke="var(--text-color)" points="52.24,-74.4566 43.1261,-69.0539 46.8816,-78.9608 52.24,-74.4566"/>
+</g>
+<!-- D&#45;&gt;C -->
+<g class="edge">
+<title>D-&gt;C</title>
+<path fill="none" stroke="var(--text-color)" d="M156.1498,-194.3827C168.7415,-179.8856 185.356,-157.2972 196.551,-139.6135"/>
+<polygon fill="var(--text-color)" stroke="var(--text-color)" points="199.6555,-141.2446 201.8613,-130.8819 193.6747,-137.6072 199.6555,-141.2446"/>
+</g>
+<!-- E&#45;&gt;A -->
+<g class="edge">
+<title>E-&gt;A</title>
+<path fill="none" stroke="var(--text-color)" d="M123.0913,-32.4965C100.5302,-58.6212 60.3482,-113.6187 39.701,-146.3485"/>
+<polygon fill="var(--text-color)" stroke="var(--text-color)" points="36.6719,-144.5929 34.4263,-154.947 42.6387,-148.2532 36.6719,-144.5929"/>
+</g>
+<!-- E&#45;&gt;B -->
+<g class="edge">
+<title>E-&gt;B</title>
+<path fill="none" stroke="var(--text-color)" d="M112.1707,-20.7148C95.3958,-24.9058 73.816,-31.7789 56.5693,-38.3648"/>
+<polygon fill="var(--text-color)" stroke="var(--text-color)" points="54.9768,-35.2317 46.9845,-42.1868 57.5696,-41.7338 54.9768,-35.2317"/>
+</g>
+<!-- E&#45;&gt;C -->
+<g class="edge">
+<title>E-&gt;C</title>
+<path fill="none" stroke="var(--text-color)" d="M145.8325,-35.8757C155.0007,-51.6366 171.2294,-74.5366 184.9416,-91.3941"/>
+<polygon fill="var(--text-color)" stroke="var(--text-color)" points="182.3201,-93.7151 191.4288,-99.1264 187.6828,-89.2159 182.3201,-93.7151"/>
+</g>
+</g>
+</svg>
+
+<p>Using a directed graph doesn't completely eliminate the problem with an odd number of people,
+but it gives the algorithm far more opportunities to create a 3 person swap to avoid this issue.</p>
+<p>Graphs are more difficult to work with in code than tables, so we'll represent the above graph
+as a table. Each column of the table belongs to a node in the graph, and will contain the node
+which that node points to.</p>
+<p>If we enumerate all possible gift swap configurations, we get a multi-row table where each row
+in the table is a possible solution. Here's a graph and the table for multiple people giving gifts
+(first row of table is shown in the graph). The first three goals are met by how the enumeration
+is done.</p>
+ <svg width="243pt" height="235pt" viewBox="0.00 0.00 243.39 234.72" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g class="graph" transform="scale(1 1) rotate(0) translate(4 230.7203)">
+<title>G</title>
+<!-- A -->
+<g class="node">
+<title>A</title>
+<ellipse fill="none" stroke="var(--text-color)" cx="27" cy="-172.296" rx="27" ry="18"/>
+<text text-anchor="middle" x="27" y="-168.096" font-family="Times,serif" font-size="14.00" fill="var(--text-color)">A</text>
+</g>
+<!-- B -->
+<g class="node">
+<title>B</title>
+<ellipse fill="none" stroke="var(--text-color)" cx="27" cy="-54.4243" rx="27" ry="18"/>
+<text text-anchor="middle" x="27" y="-50.2243" font-family="Times,serif" font-size="14.00" fill="var(--text-color)">B</text>
+</g>
+<!-- A to B -->
+<g class="edge">
+<title>A-&gt;B</title>
+<path fill="none" stroke="var(--text-emphasis)" d="M32.0094,-154.3938C33.9988,-135.3548 34.2829,-104.9737 32.8616,-82.6955"/>
+<polygon fill="var(--text-emphasis)" stroke="var(--text-emphasis)" points="36.3309,-82.1762 32.0269,-72.495 29.3542,-82.7472 36.3309,-82.1762"/>
+</g>
+<!-- C -->
+<g class="node">
+<title>C</title>
+<ellipse fill="none" stroke="var(--text-color)" cx="208.3858" cy="-113.3602" rx="27" ry="18"/>
+<text text-anchor="middle" x="208.3858" y="-109.1602" font-family="Times,serif" font-size="14.00" fill="var(--text-color)">C</text>
+</g>
+<!-- A to C -->
+<g class="edge">
+<title>A-&gt;C</title>
+<path fill="none" stroke="var(--text-dim)" d="M53.7181,-168.7091C86.8809,-160.4381 143.264,-142.2742 178.0279,-128.7867"/>
+<polygon fill="var(--text-dim)" stroke="var(--text-dim)" points="179.66,-131.9037 187.6476,-124.9433 177.0628,-125.4033 179.66,-131.9037"/>
+</g>
+<!-- D -->
+<g class="node">
+<title>D</title>
+<ellipse fill="none" stroke="var(--text-color)" cx="139.1026" cy="-208.7203" rx="27" ry="18"/>
+<text text-anchor="middle" x="139.1026" y="-204.5203" font-family="Times,serif" font-size="14.00" fill="var(--text-color)">D</text>
+</g>
+<!-- A to D -->
+<g class="edge">
+<title>A-&gt;D</title>
+<path fill="none" stroke="var(--text-dim)" d="M46.9279,-184.5098C62.287,-190.9421 83.9309,-198.2687 102.3916,-203.4136"/>
+<polygon fill="var(--text-dim)" stroke="var(--text-dim)" points="101.697,-206.8503 112.2599,-206.0278 103.4896,-200.0837 101.697,-206.8503"/>
+</g>
+<!-- E -->
+<g class="node">
+<title>E</title>
+<ellipse fill="none" stroke="var(--text-color)" cx="139.1026" cy="-18" rx="27" ry="18"/>
+<text text-anchor="middle" x="139.1026" y="-13.8" font-family="Times,serif" font-size="14.00" fill="var(--text-color)">E</text>
+</g>
+<!-- A to E -->
+<g class="edge">
+<title>A-&gt;E</title>
+<path fill="none" stroke="var(--text-dim)" d="M43.0113,-157.7995C65.5724,-131.6748 105.7544,-76.6773 126.4016,-43.9475"/>
+<polygon fill="var(--text-dim)" stroke="var(--text-dim)" points="129.4307,-45.7031 131.6763,-35.349 123.4639,-42.0428 129.4307,-45.7031"/>
+</g>
+<!-- B to A -->
+<g class="edge">
+<title>B-&gt;A</title>
+<path fill="none" stroke="var(--text-dim)" d="M21.9906,-72.3265C20.0012,-91.3656 19.7171,-121.7467 21.1384,-144.0249"/>
+<polygon fill="var(--text-dim)" stroke="var(--text-dim)" points="17.6691,-144.5442 21.9731,-154.2254 24.6458,-143.9732 17.6691,-144.5442"/>
+</g>
+<!-- B to D -->
+<g class="edge">
+<title>B-&gt;D</title>
+<path fill="none" stroke="var(--text-emphasis)" d="M34.546,-71.9751C51.3102,-100.2097 91.0378,-155.4262 116.5145,-186.4035"/>
+<polygon fill="var(--text-emphasis)" stroke="var(--text-emphasis)" points="113.8626,-188.6881 122.9765,-194.0908 119.221,-184.1838 113.8626,-188.6881"/>
+</g>
+<!-- B to E -->
+<g class="edge">
+<title>B-&gt;E</title>
+<path fill="none" stroke="var(--text-dim)" d="M53.9319,-51.7096C70.7068,-47.5185 92.2866,-40.6455 109.5333,-34.0596"/>
+<polygon fill="var(--text-dim)" stroke="var(--text-dim)" points="111.1258,-37.1926 119.1181,-30.2375 108.533,-30.6905 111.1258,-37.1926"/>
+</g>
+<!-- C to A -->
+<g class="edge">
+<title>C-&gt;A</title>
+<path fill="none" stroke="var(--text-dim)" d="M181.6677,-116.9471C148.505,-125.2181 92.1218,-143.382 57.3579,-156.8694"/>
+<polygon fill="var(--text-dim)" stroke="var(--text-dim)" points="55.7259,-153.7524 47.7382,-160.7129 58.323,-160.2528 55.7259,-153.7524"/>
+</g>
+<!-- C to D -->
+<g class="edge">
+<title>C-&gt;D</title>
+<path fill="none" stroke="var(--text-dim)" d="M191.3386,-127.6978C178.7469,-142.1949 162.1325,-164.7833 150.9374,-182.467"/>
+<polygon fill="var(--text-dim)" stroke="var(--text-dim)" points="147.8329,-180.8359 145.6271,-191.1986 153.8137,-184.4733 147.8329,-180.8359"/>
+</g>
+<!-- C to E -->
+<g class="edge">
+<title>C-&gt;E</title>
+<path fill="none" stroke="var(--text-emphasis)" d="M201.656,-95.4845C192.4877,-79.7236 176.259,-56.8236 162.5469,-39.9661"/>
+<polygon fill="var(--text-emphasis)" stroke="var(--text-emphasis)" points="165.1683,-37.6451 156.0596,-32.2338 159.8056,-42.1443 165.1683,-37.6451"/>
+</g>
+<!-- D to A -->
+<g class="edge">
+<title>D-&gt;A</title>
+<path fill="none" stroke="var(--text-emphasis)" d="M119.1747,-196.5065C103.8156,-190.0743 82.1717,-182.7476 63.711,-177.6027"/>
+<polygon fill="var(--text-emphasis)" stroke="var(--text-emphasis)" points="64.4056,-174.1661 53.8427,-174.9885 62.613,-180.9327 64.4056,-174.1661"/>
+</g>
+<!-- D to B -->
+<g class="edge">
+<title>D-&gt;B</title>
+<path fill="none" stroke="var(--text-dim)" d="M131.5566,-191.1696C114.7924,-162.935 75.0648,-107.7185 49.5881,-76.7412"/>
+<polygon fill="var(--text-dim)" stroke="var(--text-dim)" points="52.24,-74.4566 43.1261,-69.0539 46.8816,-78.9608 52.24,-74.4566"/>
+</g>
+<!-- D to C -->
+<g class="edge">
+<title>D-&gt;C</title>
+<path fill="none" stroke="var(--text-dim)" d="M156.1498,-194.3827C168.7415,-179.8856 185.356,-157.2972 196.551,-139.6135"/>
+<polygon fill="var(--text-dim)" stroke="var(--text-dim)" points="199.6555,-141.2446 201.8613,-130.8819 193.6747,-137.6072 199.6555,-141.2446"/>
+</g>
+<!-- E to A -->
+<g class="edge">
+<title>E-&gt;A</title>
+<path fill="none" stroke="var(--text-dim)" d="M123.0913,-32.4965C100.5302,-58.6212 60.3482,-113.6187 39.701,-146.3485"/>
+<polygon fill="var(--text-dim)" stroke="var(--text-dim)" points="36.6719,-144.5929 34.4263,-154.947 42.6387,-148.2532 36.6719,-144.5929"/>
+</g>
+<!-- E to B -->
+<g class="edge">
+<title>E-&gt;B</title>
+<path fill="none" stroke="var(--text-dim)" d="M112.1707,-20.7148C95.3958,-24.9058 73.816,-31.7789 56.5693,-38.3648"/>
+<polygon fill="var(--text-dim)" stroke="var(--text-dim)" points="54.9768,-35.2317 46.9845,-42.1868 57.5696,-41.7338 54.9768,-35.2317"/>
+</g>
+<!-- E to C -->
+<g class="edge">
+<title>E-&gt;C</title>
+<path fill="none" stroke="var(--text-emphasis)" d="M145.8325,-35.8757C155.0007,-51.6366 171.2294,-74.5366 184.9416,-91.3941"/>
+<polygon fill="var(--text-emphasis)" stroke="var(--text-emphasis)" points="182.3201,-93.7151 191.4288,-99.1264 187.6828,-89.2159 182.3201,-93.7151"/>
+</g>
+</g>
+</svg>
+
+<pre class="z-code"><code><span class="z-text z-plain">| A   | B   | C   | D   | E   |
+</span><span class="z-text z-plain">| --- | --- | --- | --- | --- |
+</span><span class="z-text z-plain">| B   | D   | E   | A   | C   |
+</span><span class="z-text z-plain">| B   | D   | E   | C   | A   |
+</span><span class="z-text z-plain">| B   | E   | D   | A   | C   |
+</span><span class="z-text z-plain">| B   | E   | D   | C   | A   |
+</span><span class="z-text z-plain">| C   | D   | E   | A   | B   |
+</span><span class="z-text z-plain">| C   | D   | E   | B   | A   |
+</span><span class="z-text z-plain">| C   | E   | D   | A   | B   |
+</span><span class="z-text z-plain">| C   | E   | D   | B   | A   |
+</span><span class="z-text z-plain">| D   | A   | E   | B   | C   |
+</span><span class="z-text z-plain">| D   | A   | E   | C   | B   |
+</span><span class="z-text z-plain">| D   | E   | A   | B   | C   |
+</span><span class="z-text z-plain">| D   | E   | A   | C   | B   |
+</span><span class="z-text z-plain">| E   | A   | D   | B   | C   |
+</span><span class="z-text z-plain">| E   | A   | D   | C   | B   |
+</span><span class="z-text z-plain">| E   | D   | A   | B   | C   |
+</span><span class="z-text z-plain">| E   | D   | A   | C   | B   |
+</span></code></pre>
+<p>While this is interesting, it isn't enough. It wouldn't be a good idea to just start at the top of
+the table, and move to the next row each year. That would result in A giving to B four years in a row!</p>
+<p>To fix this, we need to define a scoring system which tries to pick the next best row given the current
+row of names. Ideally, our scoring system should also include at least the previous year's names so that
+people who have never given to one another are weighted more highly than those who gave to each other just
+one or two years ago.</p>
+<p>The way I decided to do this was to add the first discovered solution, and then from there, search for
+the highest scoring solution from the discovered solutions. The scoring system I went with will penalize
+solutions which cause people to give to the same person as a previous solution, with each year decreasing
+the penalty by 50% (chosen arbitrarily, seemed to behave reasonably).</p>
+<h2 id="complexity">Complexity<a class="zola-anchor" href="#complexity" aria-label="Anchor link for: complexity">🔗</a></h2>
+<p>This problem does not scale nicely. It is exponential in nature, with just 12 people involved in the gift
+swap, there are so many solutions that web browsers don't handle it very well.</p>
+<table><thead><tr><th>People</th><th>Solutions (no couples)</th></tr></thead><tbody>
+<tr><td>3</td><td>2</td></tr>
+<tr><td>4</td><td>9</td></tr>
+<tr><td>5</td><td>44</td></tr>
+<tr><td>6</td><td>265</td></tr>
+<tr><td>7</td><td>1854</td></tr>
+<tr><td>8</td><td>14833</td></tr>
+<tr><td>9</td><td>133496</td></tr>
+<tr><td>10</td><td>1334961</td></tr>
+<tr><td>11</td><td>14684570</td></tr>
+</tbody></table>
+<p>This is approximately the curve <code>factorial(people * 1.5)</code>. There's likely a smarter way to do this to avoid
+at least some of the exponential complexity, but my use case only required 12 people, which runs in ~5 minutes
+when implemented in Rust on my laptop, so it wasn't worth the effort.</p>
+<p>The method for determining the score of a solution is also expensive, <code>O(# solutions * # previous solutions)</code>
+since it considers all previously discovered solutions. It might be worth changing this to only consider the
+previous N solutions, but again, it wasn't slow enough to be a problem with 12 people.</p>
+<h2 id="update-2024-06-22">Update 2024-06-22<a class="zola-anchor" href="#update-2024-06-22" aria-label="Anchor link for: update-2024-06-22">🔗</a></h2>
+<p>It was recently pointed out to me that while retrieving every solution for this problem is exponential,
+it also lends itself very nicely to an alternative form which will produce a result without this problem.
+The trick is to recognize that we only ever need a small fraction of the valid results. People don't
+live long enough to see a full sequence of swaps for more than a small group!</p>
+<p>With that in mind, we can just pick a possible solution by shuffling the list of people and then
+either keep the result if it matches all of our criteria, or try again with another random solution.</p>
+<p>The tool below has been updated to use the random shuffle method if there are more than eight names.
+I arbitrarily picked <code>3 * # names</code> as a number of shuffles to try for each year, selecting the most
+optimal result from that year's set of shuffles.</p>
+<h2 id="tool">Tool<a class="zola-anchor" href="#tool" aria-label="Anchor link for: tool">🔗</a></h2>
+<p>All processing is done on your computer, no data is sent to any servers.</p>
+<p>Input the list of people to be included in the gift swap here, one per line:</p>
+<textarea id="names">
+A
+B
+C
+D
+E
+</textarea>
+<p>Input the list of couples here, with names separated by a slash (<code>/</code>), one couple per line:</p>
+<textarea id="couples" placeholder="D/E">
+D/E
+B/C
+</textarea>
+<br>
+<br>
+<label>
+    Maximum number of years:
+    <input id="maxYears" type="number" value="50">
+</label>
+<p><button id="go">Find Solutions</button></p>
+<p>Logs:</p>
+<ul id="messages"></ul>
+<div id="output"></div>
+<style>
+    textarea {
+        width: 100%;
+        height: 200px;
+        resize: vertical;
+    }
+</style>
+<script src="/lib/viz-standalone.js"></script>
+<script src="/gift-swapping.js" type="module"></script>
+
+
+</div>
+    </section>
+
+    <footer>
+      <ul>
+        <li><a href="https://github.com/gerrit0">GitHub</a></li>
+      </ul>
+
+    </footer>
+  </body>
+</html>
